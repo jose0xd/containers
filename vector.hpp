@@ -2,6 +2,7 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include "iterator.hpp"
 
 namespace ft
 {
@@ -18,8 +19,8 @@ namespace ft
 		typedef const value_type&	const_reference;
 		typedef value_type*			pointer;
 		typedef const value_type*	const_pointer;
-		// iterator LegacyRandomAccessIterator and LegacyContiguousIterator to value_type
-		// const_iterator LegacyRandomAccessIterator and LegacyContiguousIterator to const value_type
+		typedef RandomAccessIterator<value_type>	iterator;
+		typedef RandomAccessIterator<const value_type>	const_iterator;
 		// reverse_iterator Implementar iterator
 		// const_reverse_iterator Implementar iterator
 
@@ -91,14 +92,19 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator==(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
+	template <class T, class Alloc>
 	bool operator!=(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
+	template <class T, class Alloc>
 	bool operator<(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
+	template <class T, class Alloc>
 	bool operator<=(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
+	template <class T, class Alloc>
 	bool operator>(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
+	template <class T, class Alloc>
 	bool operator>=(const ft::vector<T, Alloc>& lhs,
 					const ft::vector<T, Alloc>& rhs);
 	template <class T, class Alloc>
