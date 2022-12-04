@@ -1,4 +1,5 @@
 main
+a.out
 *.o
 *.gch
 notes.md
