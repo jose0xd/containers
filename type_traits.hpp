@@ -30,6 +30,9 @@ namespace ft
 	struct is_integral<wchar_t> { static const bool value = true; };
 
 	template <>
+	struct is_integral<signed char> { static const bool value = true; };
+
+	template <>
 	struct is_integral<short> { static const bool value = true; };
 
 	template <>
