@@ -26,20 +26,56 @@ namespace ft
 
 		// DATA MEMBERS
 	private:
+		allocator_type	_alloc;
+		size_type		_size;
+		size_type		_capacity;
+		pointer			_data;
 
 		// MEMBER FUNCTIONS
 	public:
-		vector();
-		explicit vector(const allocator_type& alloc);
+		//vector();
+
+		explicit vector(const allocator_type& alloc = allocator_type())
+			: _alloc(alloc), _size(0), _capacity(0), _data(nullptr) {}
+
 		explicit vector(size_type count,
 				const value_type& value = value_type(),
-				const allocator_type& alloc = allocator_type());
+				const allocator_type& alloc = allocator_type())
+			: _alloc(alloc), _size(n), _capacity(n)
+		{
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&_data[i], value);
+		}
+
 		template <class InputIt>
 		vector(InputIt first, InputIt last,
-				const allocator_type& alloc = allocator_type());
-		vector(const vector& other);
-		~vector();
+				const allocator_type& alloc = allocator_type())
+			: _alloc(alloc)
+		{
+			_size = _capacity = last - first;
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; first < last; first++, i++)
+				_alloc.construct(&_data[i], *first);
+		}
+
+		vector(const vector& other)
+			: _alloc(other._alloc), _size(other._size), _capacity(other._capacity)
+		{
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&_data[i], other._data[i]);
+		}
+
+		~vector()
+		{
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(&_data[i]);
+			_alloc.deallocate(_data, _capacity);
+		}
+
 		vector& operator=(const vector& other);
+
 		void assign(size_type count, const value_type& value);
 		template <class InputIt>
 		void assign(InputIt first, InputIt last);
