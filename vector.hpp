@@ -34,14 +34,13 @@ namespace ft
 		// MEMBER FUNCTIONS
 	public:
 		//vector();
-
 		explicit vector(const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _size(0), _capacity(0), _data(nullptr) {}
 
 		explicit vector(size_type count,
 				const value_type& value = value_type(),
 				const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _size(n), _capacity(n)
+			: _alloc(alloc), _size(count), _capacity(count)
 		{
 			_data = _alloc.allocate(_capacity);
 			for (size_type i = 0; i < _size; i++)
@@ -74,44 +73,116 @@ namespace ft
 			_alloc.deallocate(_data, _capacity);
 		}
 
-		vector& operator=(const vector& other);
+		vector& operator=(const vector& other)
+		{
+			~vector();  // Velocidad?: aumentar capacidad solo si size > capacity
+			_alloc = other._alloc; // Necessary?
+			_size = other._size;
+			_capacity = other._capacity;
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&_data[i], other._data[i]);
+			return *this;
+		}
 
-		void assign(size_type count, const value_type& value);
+		void assign(size_type count, const value_type& value)
+		{
+			~vector();
+			_size = count;
+			_capacity = count;
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < _size; i++)
+				_alloc.construct(&_data[i], value);
+		}
+
 		template <class InputIt>
-		void assign(InputIt first, InputIt last);
-		allocator_type get_allocator() const;
+		void assign(InputIt first, InputIt last)
+		{
+			~vector();
+			_size = _capacity = last - first;
+			_data = _alloc.allocate(_capacity);
+			for (size_type i = 0; first < last; first++, i++)
+				_alloc.construct(&_data[i], *first);
+		}
+
+		allocator_type get_allocator() const
+		{
+			return allocator_type(_alloc);
+		}
 
 		// Element access
-		reference at(size_type pos);
-		const_reference at(size_type pos) const;
-		reference operator[](size_type pos);
-		const_reference operator[](size_type pos) const;
-		reference front();
-		const_reference front() const;
-		reference back();
-		const_reference back() const;
-		pointer data();
-		const_pointer data() const;
+		reference at(size_type pos)
+		{
+			if (!(pos < _size))
+				throw std::out_of_range("vector");
+			return _data[pos];
+		}
+
+		const_reference at(size_type pos) const
+		{
+			if (!(pos < _size))
+				throw std::out_of_range("vector");
+			return _data[pos];
+		}
+
+		reference operator[](size_type pos) { return _data[pos]; }
+
+		const_reference operator[](size_type pos) const { return _data[pos]; }
+
+		reference front() { return _data[0]; }
+
+		const_reference front() const { return _data[0]; }
+
+		reference back() { return _data[_size - 1]; }
+
+		const_reference back() const { return _data[_size - 1]; }
+
+		pointer data() { return _data; }
+
+		const_pointer data() const { return _data; }
 
 		// Iterators
-		iterator begin();
-		const_iterator begin() const;
-		iterator end();
-		const_iterator end() const;
-		reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-		reverse_iterator rend();
-		const_reverse_iterator rend() const;
+		iterator begin() { return iterator(_data); }
+		const_iterator begin() const { return const_iterator(_data); }
+		iterator end() { return iterator(_data + _size); }
+		const_iterator end() const { return const_iterator(_data + _size); }
+		reverse_iterator rbegin() { return reverse_iterator(_data + _size); }
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(_data + _size); }
+		reverse_iterator rend() { return reverse_iterator(_data); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(_data); }
 
 		// Capacity
-		bool empty() const;
-		size_type size() const;
-		size_type max_size() const;
-		void reserve(size_type new_cap);
-		size_type capacity() const;
+		bool empty() const { return _size == 0; }
+		size_type size() const { return _size; }
+		size_type max_size() const { return _alloc.max_size(); }
+		void reserve(size_type new_cap)
+		{
+			if (new_cap > max_size())
+				throw std::length_error("can't allocate region");
+			if (new_cap > _capacity)
+			{
+				pointer new_data = _alloc.allocate(new_cap);
+				for (size_type i = 0; i < _size; i++)
+				{
+					_alloc.construct(&new_data[i], _data[i]);
+					_alloc.destroy(&_data[i]);
+				}
+				_alloc.deallocate(_data, _capacity);
+				_capacity = _new_cap;
+				_data = new_data;
+			}
+		}
+
+		size_type capacity() const { return _capacity; }
 
 		// Modifiers
-		void clear();
+		void clear()
+		{
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(&_data[i]);
+			_size = 0;
+		}
+
 		iterator insert(const_iterator pos, const_reference value);
 		iterator insert(const_iterator pos, size_type count, const_reference value);
 		template <class InputIt>
