@@ -54,7 +54,7 @@ namespace ft
 		{
 			_size = _capacity = last - first;
 			_data = _alloc.allocate(_capacity);
-			for (size_type i = 0; first < last; first++, i++)
+			for (size_type i = 0; first != last; first++, i++)
 				_alloc.construct(&_data[i], *first);
 		}
 
@@ -101,7 +101,7 @@ namespace ft
 			~vector();
 			_size = _capacity = last - first;
 			_data = _alloc.allocate(_capacity);
-			for (size_type i = 0; first < last; first++, i++)
+			for (size_type i = 0; first != last; first++, i++)
 				_alloc.construct(&_data[i], *first);
 		}
 
@@ -126,19 +126,12 @@ namespace ft
 		}
 
 		reference operator[](size_type pos) { return _data[pos]; }
-
 		const_reference operator[](size_type pos) const { return _data[pos]; }
-
 		reference front() { return _data[0]; }
-
 		const_reference front() const { return _data[0]; }
-
 		reference back() { return _data[_size - 1]; }
-
 		const_reference back() const { return _data[_size - 1]; }
-
 		pointer data() { return _data; }
-
 		const_pointer data() const { return _data; }
 
 		// Iterators
@@ -183,10 +176,49 @@ namespace ft
 			_size = 0;
 		}
 
-		iterator insert(const_iterator pos, const_reference value);
-		iterator insert(const_iterator pos, size_type count, const_reference value);
+		iterator insert(const_iterator pos, const_reference value)
+		{
+			return insert(pos, 1, value);
+		}
+
+		iterator insert(const_iterator pos, size_type count, const_reference value)
+		{
+			difference_type idx = pos - begin();
+			// ?? check pos boundary
+			if (_size == _capacity)
+				reserve(_size + count <= _capacity * 2
+						? _capacity * 2 : _capacity + count);
+			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
+			{
+				_allocator.construct(&_data[j], _data[j - count]);
+				_allocator.destroy(&_data[j - count]);
+			}
+			for (size_type i = idx; i < count; i++)
+				_allocator.construct(&_data[i], value);
+			_size += count;
+			return iterator(_data + idx);
+		}
+
 		template <class InputIt>
-		iterator insert(const_iterator pos, InputIt first, InputIt last);
+		iterator insert(const_iterator pos, InputIt first, InputIt last)
+		{
+			difference_type idx = pos - begin();
+			difference_type count = last - first;
+			// ?? check pos boundary
+			if (_size == _capacity)
+				reserve(_size + count <= _capacity * 2
+						? _capacity * 2 : _capacity + count);
+			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
+			{
+				_allocator.construct(&_data[j], _data[j - count]);
+				_allocator.destroy(&_data[j - count]);
+			}
+			for (size_type i = idx; i < count; i++)
+				_allocator.construct(&_data[i], *(first + i));
+			_size += count;
+			return iterator(_data + idx);
+		}
+
 		iterator erase(iterator pos);
 		iterator erase(iterator first, iterator last);
 		void push_back(const_reference value);
