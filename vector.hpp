@@ -2,8 +2,9 @@
 # define VECTOR_HPP
 
 # include <memory>
-# include "iterator.hpp"
 # include "algorithm.hpp"
+# include "iterator.hpp"
+# include "type_traits.hpp"
 
 namespace ft
 {
@@ -53,7 +54,10 @@ namespace ft
 				const allocator_type& alloc = allocator_type())
 			: _alloc(alloc)
 		{
-			_size = _capacity = last - first;
+			difference_type offset = 0;
+			for (InputIt it = first; it != last; it++)
+				offset++;
+			_size = _capacity = offset;
 			_data = _alloc.allocate(_capacity);
 			for (size_type i = 0; first != last; first++, i++)
 				_alloc.construct(&_data[i], *first);
@@ -76,7 +80,7 @@ namespace ft
 
 		vector& operator=(const vector& other)
 		{
-			~vector();  // Velocidad?: aumentar capacidad solo si size > capacity
+			this->~vector();  // Velocidad?: aumentar capacidad solo si size > capacity
 			_alloc = other._alloc; // Necessary?
 			_size = other._size;
 			_capacity = other._capacity;
@@ -88,7 +92,7 @@ namespace ft
 
 		void assign(size_type count, const value_type& value)
 		{
-			~vector();
+			this->~vector();
 			_size = count;
 			_capacity = count;
 			_data = _alloc.allocate(_capacity);
@@ -97,10 +101,14 @@ namespace ft
 		}
 
 		template <class InputIt>
-		void assign(InputIt first, InputIt last)
+		void assign(InputIt first, InputIt last,
+			typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0)
 		{
-			~vector();
-			_size = _capacity = last - first;
+			this->~vector();
+			difference_type offset = 0;
+			for (InputIt it = first; it != last; it++)
+				offset++;
+			_size = _capacity = offset;
 			_data = _alloc.allocate(_capacity);
 			for (size_type i = 0; first != last; first++, i++)
 				_alloc.construct(&_data[i], *first);
@@ -177,12 +185,12 @@ namespace ft
 			_size = 0;
 		}
 
-		iterator insert(const_iterator pos, const_reference value)
+		iterator insert(iterator pos, const_reference value)
 		{
 			return insert(pos, 1, value);
 		}
 
-		iterator insert(const_iterator pos, size_type count, const_reference value)
+		iterator insert(iterator pos, size_type count, const_reference value)
 		{
 			difference_type idx = pos - begin();
 			// ?? check pos boundary
@@ -201,21 +209,28 @@ namespace ft
 		}
 
 		template <class InputIt>
-		iterator insert(const_iterator pos, InputIt first, InputIt last)
+		iterator insert(iterator pos, InputIt first, InputIt last,
+			typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0)
 		{
-			difference_type idx = pos - begin();
-			difference_type count = last - first;
+			difference_type offset = 0;
+			for (iterator it = begin(); it != pos; it++)
+				offset++;
+			difference_type idx = offset;
+			offset = 0;
+			for (InputIt it = first; it != last; it++)
+				offset++;
+			difference_type count = offset;
 			// ?? check pos boundary
 			if (_size == _capacity)
 				reserve(_size + count <= _capacity * 2
 						? _capacity * 2 : _capacity + count);
-			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
+			for (difference_type j = _size + count - 1; j > idx + count - 1; j--)
 			{
 				_alloc.construct(&_data[j], _data[j - count]);
 				_alloc.destroy(&_data[j - count]);
 			}
-			for (size_type i = idx; i < count; i++)
-				_alloc.construct(&_data[i], *(first + i));
+			for (difference_type i = idx; i < count; i++, first++)
+				_alloc.construct(&_data[i], *first);
 			_size += count;
 			return iterator(_data + idx);
 		}
