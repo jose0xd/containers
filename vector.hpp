@@ -219,12 +219,74 @@ namespace ft
 			return iterator(_data + idx);
 		}
 
-		iterator erase(iterator pos);
-		iterator erase(iterator first, iterator last);
-		void push_back(const_reference value);
-		void pop_back();
-		void resize(size_type count, value_type value = value_type());
-		void swap(vector& other);
+		iterator erase(iterator pos)
+		{
+			difference_type idx = pos - begin();
+			_alloc.destroy(&_data[idx]);
+			_size--;
+			for (size_type j = idx; j < _size - 1; j++)
+				_data[j] = _data[j + 1];
+			return iterator(idx);
+		}
+
+		iterator erase(iterator first, iterator last)
+		{
+			difference_type idx = first - begin();
+			difference_type offset = last - first;
+			for (iterator it = first; it != last; it++)
+				_alloc.destroy(it);
+			for (; first != last; first++)
+				_data[first] = _data[first + offset];
+			return iterator(idx + offset);
+		}
+
+		void push_back(const_reference value)
+		{
+			if (_size == _capacity)
+				reserve(_capacity ? _capacity * 2 : 1);
+			_alloc.construct(&_data[_size], value);
+			_size++;
+		}
+
+		void pop_back()
+		{
+			if (_size)
+			{
+				_alloc.destroy(&_data[_size - 1]);
+				_size--;
+			}
+		}
+
+		void resize(size_type count, value_type value = value_type())
+		{
+			if (count > _size)
+			{
+				reserve(_size + count <= _capacity * 2
+						? _capacity * 2 : _capacity + count);
+				for (size_type i = _size; i < count; i++)
+					_alloc.construct(&_data[i], value);
+			}
+			else
+			{
+				for (size_type i = count; i < _size; i++)
+					_alloc.destroy(&_data[i]);
+			}
+			_size = count;
+		}
+
+		void swap(vector& other)
+		{
+			size_type tmp_size = other._size;
+			size_type tmp_capacity = other._capacity;
+			pointer tmp_data = other._data;
+
+			other._size = _size;
+			_size = tmp_size;
+			other._capacity = _capacity;
+			_capacity = tmp_capacity;
+			other._data = _data;
+			_data = tmp_data;
+		}
 	};
 
 	// NON-MEMBER FUNCTIONS
