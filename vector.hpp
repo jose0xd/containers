@@ -3,6 +3,7 @@
 
 # include <memory>
 # include "iterator.hpp"
+# include "algorithm.hpp"
 
 namespace ft
 {
@@ -161,7 +162,7 @@ namespace ft
 					_alloc.destroy(&_data[i]);
 				}
 				_alloc.deallocate(_data, _capacity);
-				_capacity = _new_cap;
+				_capacity = new_cap;
 				_data = new_data;
 			}
 		}
@@ -190,11 +191,11 @@ namespace ft
 						? _capacity * 2 : _capacity + count);
 			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
 			{
-				_allocator.construct(&_data[j], _data[j - count]);
-				_allocator.destroy(&_data[j - count]);
+				_alloc.construct(&_data[j], _data[j - count]);
+				_alloc.destroy(&_data[j - count]);
 			}
 			for (size_type i = idx; i < count; i++)
-				_allocator.construct(&_data[i], value);
+				_alloc.construct(&_data[i], value);
 			_size += count;
 			return iterator(_data + idx);
 		}
@@ -210,11 +211,11 @@ namespace ft
 						? _capacity * 2 : _capacity + count);
 			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
 			{
-				_allocator.construct(&_data[j], _data[j - count]);
-				_allocator.destroy(&_data[j - count]);
+				_alloc.construct(&_data[j], _data[j - count]);
+				_alloc.destroy(&_data[j - count]);
 			}
 			for (size_type i = idx; i < count; i++)
-				_allocator.construct(&_data[i], *(first + i));
+				_alloc.construct(&_data[i], *(first + i));
 			_size += count;
 			return iterator(_data + idx);
 		}
@@ -292,24 +293,40 @@ namespace ft
 	// NON-MEMBER FUNCTIONS
 	template <class T, class Alloc>
 	bool operator==(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return false;
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.first()));
+	}
+
 	template <class T, class Alloc>
 	bool operator!=(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs) { return !(lhs == rhs); }
+
 	template <class T, class Alloc>
 	bool operator<(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
+											rhs.begin(), rhs.end()));
+	}
+
 	template <class T, class Alloc>
 	bool operator<=(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs) { return !(rhs < lhs); }
 	template <class T, class Alloc>
 	bool operator>(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs) { return rhs < lhs; }
 	template <class T, class Alloc>
 	bool operator>=(const ft::vector<T, Alloc>& lhs,
-					const ft::vector<T, Alloc>& rhs);
+					const ft::vector<T, Alloc>& rhs) { return !(lhs < rhs); }
+
 	template <class T, class Alloc>
-	void swap(ft::vector<T, Alloc>& lhs, ft::vector<T, Alloc>& rhs);
+	void swap(ft::vector<T, Alloc>& lhs, ft::vector<T, Alloc>& rhs)
+	{
+		lhs.swap(rhs);
+	}
 }
 
 #endif
