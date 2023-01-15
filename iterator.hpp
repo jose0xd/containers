@@ -95,6 +95,10 @@ namespace ft
 			return RandomAccessIterator(this->_ptr - c);
 		}
 
+		difference_type operator-(RandomAccessIterator<It> it) const {
+			return _ptr - it._ptr;
+		}
+
 		// NON-MEMBER FUNCTIONS
 		friend bool operator==(const RandomAccessIterator& l, const RandomAccessIterator& r) {
 			return *l == *r;
