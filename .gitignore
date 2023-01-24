@@ -3,6 +3,5 @@ a.out
 *.o
 *.gch
 *.swp
-notes.md
 prueba*
 *test
