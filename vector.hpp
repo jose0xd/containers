@@ -21,8 +21,8 @@ namespace ft
 		typedef const value_type&								const_reference;
 		typedef value_type*										pointer;
 		typedef const value_type*								const_pointer;
-		typedef RandomAccessIterator<value_type>				iterator;
-		typedef RandomAccessIterator<const value_type>			const_iterator;
+		typedef ft::RandomAccessIterator<value_type>			iterator;
+		typedef ft::RandomAccessIterator<const value_type>		const_iterator;
 		typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 

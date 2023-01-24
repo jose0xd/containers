@@ -59,4 +59,6 @@ int main()
 	std::cout << "b != e: " << (b != e) << "\n";
 	std::cout << "b < e: " << (b < e) << "\n";
 	std::cout << "b > e: " << (b > e) << "\n";
+
+	std::cout << "e - b: " << (e - b) << "\n";
 }
