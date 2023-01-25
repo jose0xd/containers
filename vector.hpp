@@ -37,7 +37,7 @@ namespace ft
 	public:
 		//vector();
 		explicit vector(const allocator_type& alloc = allocator_type())
-			: _alloc(alloc), _size(0), _capacity(0), _data(nullptr) {}
+			: _alloc(alloc), _size(0), _capacity(0), _data(NULL) {}
 
 		explicit vector(size_type count,
 				const value_type& value = value_type(),
@@ -240,9 +240,9 @@ namespace ft
 			difference_type idx = pos - begin();
 			_alloc.destroy(&_data[idx]);
 			_size--;
-			for (size_type j = idx; j < _size - 1; j++)
+			for (size_type j = idx; j < _size; j++)
 				_data[j] = _data[j + 1];
-			return iterator(idx);
+			return iterator(&_data[idx]);
 		}
 
 		iterator erase(iterator first, iterator last)
@@ -250,10 +250,10 @@ namespace ft
 			difference_type idx = first - begin();
 			difference_type offset = last - first;
 			for (iterator it = first; it != last; it++)
-				_alloc.destroy(it);
+				_alloc.destroy(&(it));
 			for (; first != last; first++)
-				_data[first] = _data[first + offset];
-			return iterator(idx + offset);
+				*first = *(first + offset);
+			return iterator(&_data[idx + offset]);
 		}
 
 		void push_back(const_reference value)

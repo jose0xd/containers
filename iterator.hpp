@@ -101,22 +101,22 @@ namespace ft
 
 		// NON-MEMBER FUNCTIONS
 		friend bool operator==(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l == *r;
+			return &(*l) == &(*r);
 		}
 		friend bool operator!=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l != *r;
+			return &(*l) != &(*r);
 		}
 		friend bool operator<(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l < *r;
+			return &(*l) < &(*r);
 		}
 		friend bool operator<=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l <= *r;
+			return &(*l) <= &(*r);
 		}
 		friend bool operator>(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l > *r;
+			return &(*l) > &(*r);
 		}
 		friend bool operator>=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
-			return *l >= *r;
+			return &(*l) >= &(*r);
 		}
 	};
 
