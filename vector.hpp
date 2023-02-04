@@ -51,7 +51,8 @@ namespace ft
 
 		template <class InputIt>
 		vector(InputIt first, InputIt last,
-				const allocator_type& alloc = allocator_type())
+				const allocator_type& alloc = allocator_type(),
+				typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0)
 			: _alloc(alloc)
 		{
 			difference_type offset = 0;
@@ -194,7 +195,7 @@ namespace ft
 		{
 			difference_type idx = pos - begin();
 			// ?? check pos boundary
-			if (_size == _capacity)
+			if (_size + count > _capacity)
 				reserve(_size + count <= _capacity * 2
 						? _capacity * 2 : _capacity + count);
 			for (size_type j = _size + count - 1; j > idx + count - 1; j--)
@@ -202,8 +203,8 @@ namespace ft
 				_alloc.construct(&_data[j], _data[j - count]);
 				_alloc.destroy(&_data[j - count]);
 			}
-			for (size_type i = idx; i < count; i++)
-				_alloc.construct(&_data[i], value);
+			for (size_type i = 0; i < count; i++)
+				_alloc.construct(&_data[idx + i], value);
 			_size += count;
 			return iterator(_data + idx);
 		}
@@ -221,7 +222,7 @@ namespace ft
 				offset++;
 			difference_type count = offset;
 			// ?? check pos boundary
-			if (_size == _capacity)
+			if (_size + count > _capacity)
 				reserve(_size + count <= _capacity * 2
 						? _capacity * 2 : _capacity + count);
 			for (difference_type j = _size + count - 1; j > idx + count - 1; j--)
@@ -229,8 +230,8 @@ namespace ft
 				_alloc.construct(&_data[j], _data[j - count]);
 				_alloc.destroy(&_data[j - count]);
 			}
-			for (difference_type i = idx; i < count; i++, first++)
-				_alloc.construct(&_data[i], *first);
+			for (difference_type i = 0; i < count; i++, first++)
+				_alloc.construct(&_data[idx + i], *first);
 			_size += count;
 			return iterator(_data + idx);
 		}
@@ -278,8 +279,7 @@ namespace ft
 		{
 			if (count > _size)
 			{
-				reserve(_size + count <= _capacity * 2
-						? _capacity * 2 : _capacity + count);
+				reserve(count);
 				for (size_type i = _size; i < count; i++)
 					_alloc.construct(&_data[i], value);
 			}
@@ -313,7 +313,7 @@ namespace ft
 	{
 		if (lhs.size() != rhs.size())
 			return false;
-		return (ft::equal(lhs.begin(), lhs.end(), rhs.first()));
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>
