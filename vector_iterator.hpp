@@ -51,6 +51,10 @@ namespace ft
 		vectorIterator operator+(difference_type c) const {
 			return vectorIterator(this->_ptr + c);
 		}
+		friend vectorIterator operator+(difference_type c, vectorIterator it) {
+			return vectorIterator(c + it._ptr);
+		}
+
 		vectorIterator& operator--() {this->_ptr--; return *this; }
 		vectorIterator operator--(int) {
 			vectorIterator tmp(*this);
@@ -61,7 +65,6 @@ namespace ft
 		vectorIterator operator-(difference_type c) const {
 			return vectorIterator(this->_ptr - c);
 		}
-
 		difference_type operator-(vectorIterator<T> it) const {
 			return _ptr - it._ptr;
 		}
@@ -188,7 +191,7 @@ namespace ft
 	reverse_iterator<Iter>
 		operator+(typename reverse_iterator<Iter>::difference_type n,
 				const reverse_iterator<Iter>& it) {
-		return ft::reverse_iterator<Iter>(it.base() - n);
+		return reverse_iterator<Iter>(it.base() - n);
 	}
 	template <class Iterator1, class Iterator2>
 	typename reverse_iterator<Iterator1>::difference_type

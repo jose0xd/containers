@@ -255,7 +255,7 @@ namespace ft
 			for (; first != this->end(); first++)
 				*first = *(first + offset);
 			_size -= offset;
-			return iterator(&_data[idx + offset]);
+			return iterator(&_data[idx]);
 		}
 
 		void push_back(const_reference value)
