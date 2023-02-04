@@ -1,58 +1,21 @@
-#ifndef ITERATOR_HPP
-# define ITERATOR_HPP
+#ifndef VECTOR_ITERATOR_HPP
+# define VECTOR_ITERATOR_HPP
 
 # include <iterator> // for std::random_access_iterator_tag
 # include <cstddef>
 
 namespace ft
 {
-	/**
-	 * ITERATOR_TRAITS
-	 */
-	template <class Iter>
-	struct iterator_traits
+	template <typename T>
+	class vectorIterator
 	{
-		typedef typename Iter::difference_type		difference_type;
-		typedef typename Iter::value_type			value_type;
-		typedef typename Iter::pointer				pointer;
-		typedef typename Iter::reference			reference;
-		typedef typename Iter::iterator_category	iterator_category;
-	};
-
-	template <class T>
-	struct iterator_traits<T*>
-	{
+		// MEMBER TYPES
+	public:
 		typedef std::ptrdiff_t					difference_type;
 		typedef T								value_type;
 		typedef T*								pointer;
 		typedef T&								reference;
 		typedef std::random_access_iterator_tag	iterator_category;
-	};
-
-	template <class T>
-	struct iterator_traits<const T*>
-	{
-		typedef std::ptrdiff_t					difference_type;
-		typedef T								value_type;
-		typedef const T*						pointer;
-		typedef const T&						reference;
-		typedef std::random_access_iterator_tag	iterator_category;
-	};
-
-	// TODO: NO SE USA
-	/**
-	 * RANDOM ACCESS ITERATOR
-	 */
-	template <typename It>
-	class RandomAccessIterator
-	{
-		// MEMBER TYPES
-	public:
-		typedef typename ft::iterator_traits<It*>::value_type		value_type;
-		typedef typename ft::iterator_traits<It*>::difference_type	difference_type;
-		typedef typename ft::iterator_traits<It*>::pointer			pointer;
-		typedef typename ft::iterator_traits<It*>::reference		reference;
-		typedef std::random_access_iterator_tag						iterator_category;
 
 		// DATA MEMBERS
 	private:
@@ -60,82 +23,82 @@ namespace ft
 
 		// MEMBER FUNCTIONS
 	public:
-		RandomAccessIterator() {}
-		RandomAccessIterator(pointer ptr) { this->_ptr = ptr; }
-		RandomAccessIterator(const RandomAccessIterator& other) { this->_ptr = other._ptr; }
-		~RandomAccessIterator() {}
+		vectorIterator() {}
+		vectorIterator(pointer ptr) { this->_ptr = ptr; }
+		vectorIterator(const vectorIterator& other) { this->_ptr = other._ptr; }
+		~vectorIterator() {}
 
-		RandomAccessIterator& operator=(const RandomAccessIterator& other)
+		vectorIterator& operator=(const vectorIterator& other)
 		{
 			this->_ptr = other._ptr;
 			return *this;
 		}
 
+ 		// const conversion
+ 		operator vectorIterator<const T>() const { return vectorIterator<const T>(_ptr); }
+
 		reference operator*() const { return *this->_ptr; }
 		pointer operator->() const { return this->_ptr; }
 		reference operator[](difference_type c) const { return *(this->_ptr + c); }
 
-		RandomAccessIterator& operator++() {this->_ptr++; return *this; }
-		RandomAccessIterator operator++(int) {
-			RandomAccessIterator tmp(*this);
+		vectorIterator& operator++() {this->_ptr++; return *this; }
+		vectorIterator operator++(int) {
+			vectorIterator tmp(*this);
 			this->_ptr++;
 			return tmp;
 		}
-		RandomAccessIterator& operator+=(difference_type c) { this->_ptr += c; return *this; }
-		RandomAccessIterator operator+(difference_type c) const {
-			return RandomAccessIterator(this->_ptr + c);
+		vectorIterator& operator+=(difference_type c) { this->_ptr += c; return *this; }
+		vectorIterator operator+(difference_type c) const {
+			return vectorIterator(this->_ptr + c);
 		}
-		RandomAccessIterator& operator--() {this->_ptr--; return *this; }
-		RandomAccessIterator operator--(int) {
-			RandomAccessIterator tmp(*this);
+		vectorIterator& operator--() {this->_ptr--; return *this; }
+		vectorIterator operator--(int) {
+			vectorIterator tmp(*this);
 			this->_ptr--;
 			return tmp;
 		}
-		RandomAccessIterator& operator-=(difference_type c) { this->_ptr -= c; return *this; }
-		RandomAccessIterator operator-(difference_type c) const {
-			return RandomAccessIterator(this->_ptr - c);
+		vectorIterator& operator-=(difference_type c) { this->_ptr -= c; return *this; }
+		vectorIterator operator-(difference_type c) const {
+			return vectorIterator(this->_ptr - c);
 		}
 
-		difference_type operator-(RandomAccessIterator<It> it) const {
+		difference_type operator-(vectorIterator<T> it) const {
 			return _ptr - it._ptr;
 		}
 
 		// NON-MEMBER FUNCTIONS
-		friend bool operator==(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator==(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) == &(*r);
 		}
-		friend bool operator!=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator!=(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) != &(*r);
 		}
-		friend bool operator<(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator<(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) < &(*r);
 		}
-		friend bool operator<=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator<=(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) <= &(*r);
 		}
-		friend bool operator>(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator>(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) > &(*r);
 		}
-		friend bool operator>=(const RandomAccessIterator& l, const RandomAccessIterator& r) {
+		friend bool operator>=(const vectorIterator& l, const vectorIterator& r) {
 			return &(*l) >= &(*r);
 		}
 	};
 
 
-	/**
-	 * REVERSE ITERATOR
-	 */
 	template <class Iter>
 	class reverse_iterator
 	{
 		// MEMBER TYPES
 	public:
-		typedef Iter													iterator_type;
-		typedef typename ft::iterator_traits<Iter>::iterator_category	iterator_category;
-		typedef typename ft::iterator_traits<Iter>::value_type			value_type;
-		typedef typename ft::iterator_traits<Iter>::difference_type		difference_type;
-		typedef typename ft::iterator_traits<Iter>::pointer				pointer;
-		typedef typename ft::iterator_traits<Iter>::reference			reference;
+		typedef Iter								iterator_type;
+		typedef typename Iter::iterator_category	iterator_category;
+		typedef typename Iter::value_type			value_type;
+		typedef typename Iter::difference_type		difference_type;
+		typedef typename Iter::pointer				pointer;
+		typedef typename Iter::reference			reference;
 
 		// DATA MEMBERS
 	private:

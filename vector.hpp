@@ -3,7 +3,7 @@
 
 # include <memory>
 # include "algorithm.hpp"
-# include "iterator.hpp"
+# include "vector_iterator.hpp"
 # include "type_traits.hpp"
 
 namespace ft
@@ -21,8 +21,8 @@ namespace ft
 		typedef const value_type&								const_reference;
 		typedef value_type*										pointer;
 		typedef const value_type*								const_pointer;
-		typedef ft::RandomAccessIterator<value_type>			iterator;
-		typedef ft::RandomAccessIterator<const value_type>		const_iterator;
+		typedef ft::vectorIterator<T>					iterator;
+		typedef ft::vectorIterator<const T>			const_iterator;
 		typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -250,9 +250,10 @@ namespace ft
 			difference_type idx = first - begin();
 			difference_type offset = last - first;
 			for (iterator it = first; it != last; it++)
-				_alloc.destroy(&(it));
-			for (; first != last; first++)
+				_alloc.destroy(&(*it));
+			for (; first != this->end(); first++)
 				*first = *(first + offset);
+			_size -= offset;
 			return iterator(&_data[idx + offset]);
 		}
 
