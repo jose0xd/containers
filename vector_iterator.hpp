@@ -65,7 +65,7 @@ namespace ft
 		vectorIterator operator-(difference_type c) const {
 			return vectorIterator(this->_ptr - c);
 		}
-		difference_type operator-(vectorIterator<T> it) const {
+		difference_type operator-(vectorIterator it) const {
 			return _ptr - it._ptr;
 		}
 
@@ -105,7 +105,7 @@ namespace ft
 
 		// DATA MEMBERS
 	private:
-		iterator_type _ptr;
+		iterator_type _ptr; // TODO: change name, is a iterator, not a pointer
 
 		// MEMBER FUNCTIONS
 	public:
@@ -124,7 +124,7 @@ namespace ft
 		iterator_type base() const { return this->_ptr; }
 		reference operator*() const { return *(this->_ptr - 1);
 		}
-		pointer operator->() const { return this->_ptr; }
+		pointer operator->() const { return &(*(this->_ptr - 1)); }
 		reference operator[] (difference_type n) const { return *(this->_ptr - n - 1); }
 
 		reverse_iterator& operator++() { this->_ptr--; return *this; }
