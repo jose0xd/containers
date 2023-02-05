@@ -4,6 +4,7 @@
 # include <memory>
 # include "algorithm.hpp"
 # include "vector_iterator.hpp"
+# include "reverse_iterator.hpp"
 # include "type_traits.hpp"
 
 namespace ft

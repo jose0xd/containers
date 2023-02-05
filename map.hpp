@@ -4,6 +4,8 @@
 # include <memory>
 # include <functional> // TODO less is allowed
 # include "utility.hpp"
+# include "map_iterator.hpp"
+# include "reverse_iterator.hpp"
 
 namespace ft
 {
