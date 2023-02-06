@@ -5,6 +5,7 @@
 
 # include <memory>
 # include <functional> // TODO less is allowed
+# include <stdexcept>
 # include "utility.hpp"
 # include "rbtNode.hpp"
 # include "map_iterator.hpp"
@@ -18,8 +19,8 @@ namespace ft
     {
     public:
         // MEMBER TYPES
-        typedef Key key_type;
-        typedef T   mapped_type;
+        typedef Key                                     key_type;
+        typedef T                                       mapped_type;
         typedef ft::pair<const Key, T>                  value_type;
         typedef std::size_t                             size_type;
         typedef std::ptrdiff_t                          difference_type;
@@ -53,28 +54,71 @@ namespace ft
         };
 
     private:
+        tree_node		*_root;
         key_compare		_comp;
         allocator_type	_alloc;
-        tree_node		*_root;
+        size_type       _size;
+        // TODO: add _begin to return it in constant time
 
     public:
         // MEMBER FUNCTIONS
         //map() {}
         explicit map(const key_compare& comp = key_compare(),
-            const allocator_type& alloc = allocator_type()) : _root(NULL) {} // TODO
+            const allocator_type& alloc = allocator_type())
+            : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {}
+
         template <class InputIt>
         map(InputIt first, InputIt last,
             const key_compare& comp = key_compare(),
-            const allocator_type& alloc = allocator_type()) {} // TODO
-        map(const map& other) {} // TODO
-        ~map() {}
-        map& operator=(const map& other);
+            const allocator_type& alloc = allocator_type())
+            : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {
+            insert(first, last);
+        }
+
+        map(const map& other) : _root(NULL), _comp(other._comp), _alloc(other._alloc), _size(0) {
+            insert(other.begin(), other.end());
+        }
+
+        ~map() {} // TODO: delete
+
+        map& operator=(const map& other) {
+            _root = NULL;
+            _comp = other._comp;
+            _alloc = other._alloc;
+            _size = other._size;
+            insert(other.begin(), other.end());
+        }
+
         allocator_type get_allocator() const { return _alloc; }
 
         // Element access
-        mapped_type& at(const key_type& key);
-        const mapped_type& at(const key_type& key) const;
-        mapped_type& operator[](const key_type& key);
+        mapped_type& at(const key_type& key) {
+            tree_node *node = _root;
+            while (node) {
+                if (!_comp(node->value.first, key) && !_comp(key, node->value.first))
+                    return node->value.second;
+                if (_comp(key, node->value.first))
+                    node = node->left;
+                else
+                    node = node->right;
+            }
+            throw std::out_of_range("map::at : key does not exist");
+        }
+        const mapped_type& at(const key_type& key) const {
+            tree_node *node = _root;
+            while (node) {
+                if (!_comp(node->value.first, key) && !_comp(key, node->value.first))
+                    return node->value.second;
+                if (_comp(key, node->value.first))
+                    node = node->left;
+                else
+                    node = node->right;
+            }
+            throw std::out_of_range("map::at : key does not exist");
+        }
+        mapped_type& operator[](const key_type& key) {
+            return (*(insert(ft::make_pair(key, mapped_type())).first)).second;
+        }
 
         // Iterators
         iterator begin();
@@ -87,9 +131,9 @@ namespace ft
         const_reverse_iterator rend() const;
 
         // Capacity
-        bool empty() const;
-        size_type size() const;
-        size_type max_size() const;
+        bool empty() const { return _size == 0; }
+        size_type size() const { return _size; }
+        size_type max_size() const { return _alloc.max_size(); }
 
         // Modifiers
         void clear();
