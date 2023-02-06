@@ -1,9 +1,12 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
+#include <iostream>
+
 # include <memory>
 # include <functional> // TODO less is allowed
 # include "utility.hpp"
+# include "rbtNode.hpp"
 # include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
 
@@ -30,6 +33,7 @@ namespace ft
         typedef ft::mapIterator<const T>                const_iterator;
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+		typedef rbtNode<value_type>						tree_node;
 
         // MEMBER CLASSES
         class value_compare
@@ -49,15 +53,15 @@ namespace ft
         };
 
     private:
-        key_compare     _comp;
-        allocator_type  _alloc;
-        //tree ???
+        key_compare		_comp;
+        allocator_type	_alloc;
+        tree_node		*_root;
 
     public:
         // MEMBER FUNCTIONS
         //map() {}
         explicit map(const key_compare& comp = key_compare(),
-            const allocator_type& alloc = allocator_type()) {} // TODO
+            const allocator_type& alloc = allocator_type()) : _root(NULL) {} // TODO
         template <class InputIt>
         map(InputIt first, InputIt last,
             const key_compare& comp = key_compare(),
@@ -89,7 +93,31 @@ namespace ft
 
         // Modifiers
         void clear();
-        ft::pair<iterator, bool> insert(const value_type& value);
+        // ft::pair<iterator, bool> insert(const value_type& value);
+        ///////
+		tree_node *insert(value_type value) {
+			tree_node *new_node = new tree_node(value, RED);
+			tree_node *parent = NULL;
+			tree_node *tmp = _root;
+			while (tmp) {
+				parent = tmp;
+				if (_comp(value.first, tmp->value.first))
+					tmp = tmp->left;
+				else
+					tmp = tmp->right;
+			}
+			new_node->parent = parent;
+			if (!parent)
+				_root = new_node;
+			else {
+				if (_comp(new_node->value.first, parent->value.first))
+					parent->left = new_node;
+				else
+					parent->right = new_node;
+			}
+			return new_node;
+		}
+        ////////
         iterator insert(iterator pos, const value_type& value);
         template <class InputIt>
         void insert(InputIt first, InputIt last);

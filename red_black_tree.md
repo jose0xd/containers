@@ -49,7 +49,7 @@ if y == T.nil
     T.root = z
 elseif z.key < y.key
     y.left = z
-else y.right = z
+    else y.right = z
 z.left = T.nil
 z.right = T.nil
 z.color = RED

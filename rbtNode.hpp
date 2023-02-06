@@ -1,35 +1,43 @@
-#ifndef RBTREE_HPP
-# define RBTREE_HPP
+#ifndef RBTNODE_HPP
+# define RBTNODE_HPP
 
 namespace ft
 {
+	enum Color {
+		BLACK = 0,
+		RED = 1
+	};
+
 	template <typename T>
-	struct node
+	struct rbtNode
 	{
 		T		value;
-		node	*parent;
-		node	*left;
-		node	*right;
+		rbtNode	*parent;
+		rbtNode	*left;
+		rbtNode	*right;
+		bool	color;
 
-		node(T val = T()) : value(val), parent(NULL), left(NULL), right(NULL) {}
-		node(const node& other) { *this = other; }
-		~node() {}
+		rbtNode(T val = T(), bool col = BLACK)
+			: value(val), parent(NULL), left(NULL), right(NULL), color(col) {}
+		rbtNode(const rbtNode& other) { *this = other; }
+		~rbtNode() {}
 
-		node& operator=(const node& other) {
+		rbtNode& operator=(const rbtNode& other) {
 			value = other.value;
 			parent = other.parent;
 			left = other.left;
 			right = other.right;
+			color = other.color;
 		}
 
-		node *minimum(node *n) {
+		rbtNode *minimum(rbtNode *n) {
 			if (!n)
 				return NULL;
 			while (n->left)
 				n = n->left;
 			return n;
 		}
-		node *maximum(node *n) {
+		rbtNode *maximum(rbtNode *n) {
 			if (!n)
 				return NULL;
 			while (n->right)
@@ -37,39 +45,30 @@ namespace ft
 			return n;
 		}
 
-		node *next() {
-			node *tmp = this;
+		rbtNode *next() {
+			rbtNode *tmp = this;
 			if (tmp->right)
 				return minimun(tmp->right);
 
-			node *tmp_parent = tmp->parent;
+			rbtNode *tmp_parent = tmp->parent;
 			while (tmp_parent && tmp == tmp_parent->right) {
 				tmp = tmp_parent;
 				tmp_parent = tmp_parent->parent;
 			}
 			return tmp_parent;
 		}
-		node *prev() {
-			node *tmp = this;
+		rbtNode *prev() {
+			rbtNode *tmp = this;
 			if (tmp->left)
 				return maximum(tmp->left);
 
-			node *tmp_parent = tmp->parent;
+			rbtNode *tmp_parent = tmp->parent;
 			while (tmp_parent && tmp == tmp_parent->left) {
 				tmp = tmp_parent;
 				tmp_parent = tmp_parent->parent;
 			}
 			return tmp_parent;
 		}
-	};
-
-	template <typename T, typename Compare>
-	class rbtree
-	{
-	public:
-		typedef T				value_type;
-		typedef struct node<T>	node_type;
-		typedef node_type*		node_pointer;
 	};
 }
 

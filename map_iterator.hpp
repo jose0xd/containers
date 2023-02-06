@@ -3,7 +3,7 @@
 
 # include <iterator> // for std::bidirectional_iterator_tag
 # include <cstddef>
-# include "rbtree.hpp"
+# include "rbtNode.hpp"
 
 namespace ft
 {
@@ -17,7 +17,7 @@ namespace ft
 		typedef T*								pointer;
 		typedef T&								reference;
 		typedef std::bidirectional_iterator_tag	iterator_category;
-		typedef struct node<T>					node_type;
+		typedef struct rbtNode<T>					node_type;
 		typedef node_type*						node_pointer;
 
 		// DATA MEMBERS
