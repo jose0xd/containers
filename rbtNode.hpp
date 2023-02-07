@@ -48,14 +48,15 @@ namespace ft
 		rbtNode *next() {
 			rbtNode *tmp = this;
 			if (tmp->right)
-				return minimun(tmp->right);
+				return minimum(tmp->right);
 
+			rbtNode *possible_last = tmp->right;
 			rbtNode *tmp_parent = tmp->parent;
 			while (tmp_parent && tmp == tmp_parent->right) {
 				tmp = tmp_parent;
 				tmp_parent = tmp_parent->parent;
 			}
-			return tmp_parent;
+			return tmp_parent ? tmp_parent : possible_last;
 		}
 		rbtNode *prev() {
 			rbtNode *tmp = this;

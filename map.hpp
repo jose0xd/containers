@@ -30,8 +30,8 @@ namespace ft
         typedef const value_type&                       const_reference;
         typedef typename Allocator::pointer             pointer;
         typedef typename Allocator::const_pointer       const_pointer;
-        typedef ft::mapIterator<T>                      iterator;
-        typedef ft::mapIterator<const T>                const_iterator;
+        typedef ft::mapIterator<value_type>             iterator;
+        typedef ft::mapIterator<const value_type>       const_iterator;
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 		typedef rbtNode<value_type>						tree_node;
@@ -39,7 +39,7 @@ namespace ft
         // MEMBER CLASSES
         class value_compare
         {
-            //friend class map; ???
+            friend class map;
         protected:
             Compare comp;
             value_compare(Compare c) : comp(c) {}
@@ -58,6 +58,7 @@ namespace ft
         key_compare		_comp;
         allocator_type	_alloc;
         size_type       _size;
+        tree_node       *_end;
         // TODO: add _begin to return it in constant time
 
     public:
@@ -65,7 +66,10 @@ namespace ft
         //map() {}
         explicit map(const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type())
-            : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {}
+            : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {
+            _end = new tree_node();
+            _end->parent = _root;
+        }
 
         template <class InputIt>
         map(InputIt first, InputIt last,
@@ -121,14 +125,24 @@ namespace ft
         }
 
         // Iterators
-        iterator begin();
-        const_iterator begin() const;
-        iterator end();
-        const_iterator end() const;
-        reverse_iterator rbegin();
-        const_reverse_iterator rbegin() const;
-        reverse_iterator rend();
-        const_reverse_iterator rend() const;
+        iterator begin() { return iterator(_root->minimum(_root)); }
+        const_iterator begin() const { return iterator(_root->minimum(_root)); } // TODO: const_iterator constructor fails
+        iterator end() {
+            tree_node *last = _root->maximum(_root);
+            _end->parent = last;
+            last->right = _end;
+            return iterator(_end);
+        }
+        const_iterator end() const {
+            tree_node *last = _root->maximum(_root);
+            _end->parent = last;
+            last->right = _end;
+            return iterator(_end);  // TODO: const_iterator constructor fails
+        }
+        reverse_iterator rbegin() { return reverse_iterator(end()); }
+        const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+        reverse_iterator rend() { return reverse_iterator(begin()); }
+        const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
         // Capacity
         bool empty() const { return _size == 0; }

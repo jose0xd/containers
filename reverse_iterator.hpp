@@ -34,9 +34,14 @@ namespace ft
 		}
 
 		iterator_type base() const { return this->_iter; }
-		reference operator*() const { return *(this->_iter - 1);
+		reference operator*() const {
+			iterator_type tmp = _iter;
+			return *(--tmp);
 		}
-		pointer operator->() const { return &(*(this->_iter - 1)); }
+		pointer operator->() const {
+			iterator_type tmp = _iter;
+			return &(*(--tmp));
+		}
 		reference operator[] (difference_type n) const { return *(this->_iter - n - 1); }
 
 		reverse_iterator& operator++() { this->_iter--; return *this; }

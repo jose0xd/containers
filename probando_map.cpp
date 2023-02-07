@@ -18,4 +18,23 @@ int main() {
     const int y = m.at(2);
     std::cout << "y: " << y << std::endl;
     // m.at(3);
+    auto it = m.begin();
+    auto last = m.end();
+    std::cout << "last: " << last->first << std::endl;
+    last--;
+    std::cout << "last: " << last->first << std::endl;
+    std::cout << "it first: " << it->first << std::endl;
+    it++;
+    std::cout << "it first: " << it->first << std::endl;
+    it++;
+    std::cout << "it first: " << it->first << std::endl;
+    it++;
+    std::cout << "it first: " << it->first << std::endl;
+    for (auto iter = m.begin(); iter != m.end(); ++iter)
+        std::cout << "oldschool: " << iter->first << " " << std::endl;
+    std::cout << std::endl;
+    for (auto elem : m) {
+        std::cout << elem.first << " " << std::endl;
+    }
+    std::cout << std::endl;
 }

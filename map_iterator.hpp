@@ -17,7 +17,7 @@ namespace ft
 		typedef T*								pointer;
 		typedef T&								reference;
 		typedef std::bidirectional_iterator_tag	iterator_category;
-		typedef struct rbtNode<T>					node_type;
+		typedef struct rbtNode<T>				node_type;
 		typedef node_type*						node_pointer;
 
 		// DATA MEMBERS
@@ -27,7 +27,7 @@ namespace ft
 		// MEMBER FUNCTIONS
 	public:
 		mapIterator() {}
-		mapIterator(pointer ptr) { this->_ptr = ptr; }
+		mapIterator(node_pointer ptr) { this->_ptr = ptr; }
 		mapIterator(const mapIterator& other) { this->_ptr = other._ptr; }
 		~mapIterator() {}
 
@@ -37,8 +37,8 @@ namespace ft
 			return *this;
 		}
 
- 		// const conversion
- 		operator mapIterator<const T>() const { return mapIterator<const T>(_ptr); }
+		// const conversion
+		operator mapIterator<const T>() const { return mapIterator<T>(_ptr); }
 
 		reference operator*() const { return _ptr->value; }
 		pointer operator->() const { return &(_ptr->value); }
