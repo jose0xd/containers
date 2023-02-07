@@ -129,14 +129,18 @@ namespace ft
         const_iterator begin() const { return iterator(_root->minimum(_root)); } // TODO: const_iterator constructor fails
         iterator end() {
             tree_node *last = _root->maximum(_root);
-            _end->parent = last;
-            last->right = _end;
+            if (last != _end) {
+                _end->parent = last;
+                last->right = _end;
+            }
             return iterator(_end);
         }
         const_iterator end() const {
             tree_node *last = _root->maximum(_root);
-            _end->parent = last;
-            last->right = _end;
+            if (last != _end) {
+                _end->parent = last;
+                last->right = _end;
+            }
             return iterator(_end);  // TODO: const_iterator constructor fails
         }
         reverse_iterator rbegin() { return reverse_iterator(end()); }

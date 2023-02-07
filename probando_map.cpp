@@ -20,16 +20,21 @@ int main() {
     // m.at(3);
     auto it = m.begin();
     auto last = m.end();
+    std::cout << "NULL: " << NULL << std::endl;
     std::cout << "last: " << last->first << std::endl;
     last--;
     std::cout << "last: " << last->first << std::endl;
     std::cout << "it first: " << it->first << std::endl;
+    std::cout << "it second: " << it->second << std::endl;
     it++;
     std::cout << "it first: " << it->first << std::endl;
     it++;
     std::cout << "it first: " << it->first << std::endl;
     it++;
     std::cout << "it first: " << it->first << std::endl;
+
+    std::cout << "it == m.end(): " << (it == m.end()) << std::endl;
+    std::cout << "it == last: " << (it == last) << std::endl;
     for (auto iter = m.begin(); iter != m.end(); ++iter)
         std::cout << "oldschool: " << iter->first << " " << std::endl;
     std::cout << std::endl;
