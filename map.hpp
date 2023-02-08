@@ -189,9 +189,43 @@ namespace ft
         void swap(map& other);
 
         // Lookup
-        size_type count(const key_type& key) const;
-        iterator find(const key_type& key);
-        const_iterator find(const key_type& key) const;
+        size_type count(const key_type& key) const { // ?? if call find get sgfault (loop mapIterator const conversion)
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first))
+					node = node->left;
+				else
+					node = node->right;
+			}
+            if (node)
+                return 1;
+            return 0;
+        }
+        iterator find(const key_type& key) {
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first))
+					node = node->left;
+				else
+					node = node->right;
+			}
+            if (node)
+                return iterator(node);
+            return iterator(_end);
+        }
+        const_iterator find(const key_type& key) const {
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first))
+					node = node->left;
+				else
+					node = node->right;
+			}
+            if (node)
+                return iterator(node);
+            return iterator(_end);
+        }
+
         ft::pair<iterator, iterator> equal_range(const key_type& key);
         ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const;
         iterator lower_bound(const key_type& key);

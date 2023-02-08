@@ -20,7 +20,6 @@ int main() {
     // m.at(3);
     auto it = m.begin();
     auto last = m.end();
-    std::cout << "NULL: " << NULL << std::endl;
     std::cout << "last: " << last->first << std::endl;
     last--;
     std::cout << "last: " << last->first << std::endl;
@@ -42,4 +41,10 @@ int main() {
         std::cout << elem.first << " " << std::endl;
     }
     std::cout << std::endl;
+
+    auto f = m.find(1);
+    auto e = m.find(3);
+    std::cout << "e->second: " << e->second << std::endl;
+    std::cout << "f->second: " << f->second << std::endl;
+    std::cout << "count(1): " << m.count(1) << ", count(3): " << m.count(3) << std::endl;
 }
