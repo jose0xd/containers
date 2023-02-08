@@ -64,4 +64,39 @@ int main() {
     for (auto& q = p.first; q != p.second; ++q) {
         std::cout << "m[" << q->first << "] = " << q->second << '\n';
     }
+
+    // Comparators
+    ft::map<int, char> alice = ft::map<int, char>();
+    alice.insert(ft::make_pair(1, 'a'));
+    alice.insert(ft::make_pair(2, 'b'));
+    alice.insert(ft::make_pair(3, 'c'));
+    ft::map<int, char> bob = ft::map<int, char>();
+    bob.insert(ft::make_pair(7, 'Z'));
+    bob.insert(ft::make_pair(8, 'Y'));
+    bob.insert(ft::make_pair(9, 'X'));
+    bob.insert(ft::make_pair(10, 'W'));
+    ft::map<int, char> eve = ft::map<int, char>();
+    eve.insert(ft::make_pair(1, 'a'));
+    eve.insert(ft::make_pair(2, 'b'));
+    eve.insert(ft::make_pair(3, 'c'));
+ 
+    std::cout << std::boolalpha;
+ 
+    // Compare non equal containers
+    std::cout << "alice == bob returns " << (alice == bob) << '\n';
+    std::cout << "alice != bob returns " << (alice != bob) << '\n';
+    std::cout << "alice <  bob returns " << (alice < bob) << '\n';
+    std::cout << "alice <= bob returns " << (alice <= bob) << '\n';
+    std::cout << "alice >  bob returns " << (alice > bob) << '\n';
+    std::cout << "alice >= bob returns " << (alice >= bob) << '\n';
+ 
+    std::cout << '\n';
+ 
+    // Compare equal containers
+    std::cout << "alice == eve returns " << (alice == eve) << '\n';
+    std::cout << "alice != eve returns " << (alice != eve) << '\n';
+    std::cout << "alice <  eve returns " << (alice < eve) << '\n';
+    std::cout << "alice <= eve returns " << (alice <= eve) << '\n';
+    std::cout << "alice >  eve returns " << (alice > eve) << '\n';
+    std::cout << "alice >= eve returns " << (alice >= eve) << '\n';
 }

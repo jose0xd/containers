@@ -4,9 +4,10 @@
 #include <iostream>
 
 # include <memory>
-# include <functional> // TODO less is allowed
+# include <functional>
 # include <stdexcept>
 # include "utility.hpp"
+# include "algorithm.hpp"
 # include "rbtNode.hpp"
 # include "map_iterator.hpp"
 # include "reverse_iterator.hpp"
@@ -31,7 +32,7 @@ namespace ft
         typedef typename Allocator::pointer             pointer;
         typedef typename Allocator::const_pointer       const_pointer;
         typedef ft::mapIterator<value_type>             iterator;
-        typedef ft::mapIterator<const value_type>       const_iterator;
+        typedef ft::mapIterator<value_type>             const_iterator; // TODO: const value_type fails
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 		typedef rbtNode<value_type>						tree_node;
@@ -126,7 +127,7 @@ namespace ft
 
         // Iterators
         iterator begin() { return iterator(_root->minimum(_root)); }
-        const_iterator begin() const { return iterator(_root->minimum(_root)); } // TODO: const_iterator constructor fails
+        const_iterator begin() const { return const_iterator(_root->minimum(_root)); }
         iterator end() {
             tree_node *last = _root->maximum(_root);
             if (last != _end) {
@@ -141,7 +142,7 @@ namespace ft
                 _end->parent = last;
                 last->right = _end;
             }
-            return iterator(_end);  // TODO: const_iterator constructor fails
+            return const_iterator(_end);
         }
         reverse_iterator rbegin() { return reverse_iterator(end()); }
         const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
@@ -293,22 +294,37 @@ namespace ft
     // NON-MEMBER FUNCTIONS
     template <class Key, class T, class Compare, class Alloc>
     bool operator==(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) {
+        if (lhs.size() != rhs.size())
+            return false;
+
+        typename ft::map<Key, T, Compare, Alloc>::const_iterator lhs_iter = lhs.begin();
+        typename ft::map<Key, T, Compare, Alloc>::const_iterator rhs_iter = rhs.begin();
+        while (lhs_iter != lhs.end()) {
+            if (lhs_iter->first != rhs_iter->first || lhs_iter->second != rhs_iter->second)
+                return false;
+            lhs_iter++;
+            rhs_iter++;
+        }
+        return true;
+    }
     template <class Key, class T, class Compare, class Alloc>
     bool operator!=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) { return !(lhs == rhs); }
     template <class Key, class T, class Compare, class Alloc>
     bool operator<(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) {
+        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    }
     template <class Key, class T, class Compare, class Alloc>
     bool operator<=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) { return !(rhs < lhs); }
     template <class Key, class T, class Compare, class Alloc>
     bool operator>(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) { return rhs < lhs; }
     template <class Key, class T, class Compare, class Alloc>
     bool operator>=(const ft::map<Key, T, Compare, Alloc>& lhs,
-                    const ft::map<Key, T, Compare, Alloc>& rhs);
+                    const ft::map<Key, T, Compare, Alloc>& rhs) { return !(lhs < rhs); }
 }
 
 #endif

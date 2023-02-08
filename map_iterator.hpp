@@ -38,7 +38,7 @@ namespace ft
 		}
 
 		// const conversion
-		operator mapIterator<const T>() const { return mapIterator<T>(_ptr); }
+		operator mapIterator<const T>() const { return mapIterator<const T>(_ptr); }
 
 		reference operator*() const { return _ptr->value; }
 		pointer operator->() const { return &(_ptr->value); }
