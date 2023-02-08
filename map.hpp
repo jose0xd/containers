@@ -157,7 +157,7 @@ namespace ft
         void clear();
         // ft::pair<iterator, bool> insert(const value_type& value);
         ///////
-		tree_node *insert(value_type value) {
+		iterator insert(value_type value) {
 			tree_node *new_node = new tree_node(value, RED);
 			tree_node *parent = NULL;
 			tree_node *tmp = _root;
@@ -177,7 +177,7 @@ namespace ft
 				else
 					parent->right = new_node;
 			}
-			return new_node;
+			return iterator(new_node);
 		}
         ////////
         iterator insert(iterator pos, const value_type& value);
@@ -226,12 +226,64 @@ namespace ft
             return iterator(_end);
         }
 
-        ft::pair<iterator, iterator> equal_range(const key_type& key);
-        ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const;
-        iterator lower_bound(const key_type& key);
-        const_iterator lower_bound(const key_type& key) const;
-        iterator upper_bound(const key_type& key);
-        const_iterator upper_bound(const key_type& key) const;
+        ft::pair<iterator, iterator> equal_range(const key_type& key) {
+            return make_pair(lower_bound(key), upper_bound(key));
+        }
+        ft::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
+            return make_pair(lower_bound(key), upper_bound(key));
+        }
+        iterator lower_bound(const key_type& key) {
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first)) {
+                    if (node->left)
+                        node = node->left;
+                    else
+                        break;
+                }
+				else {
+                    if (node->right)
+                        node = node->right;
+                    else
+                        break;
+                }
+			}
+            if (node)
+                return iterator(node);
+            return iterator(_end);
+        }
+        const_iterator lower_bound(const key_type& key) const {
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first)) {
+                    if (node->left)
+                        node = node->left;
+                    else
+                        break;
+                }
+				else {
+                    if (node->right)
+                        node = node->right;
+                    else
+                        break;
+                }
+			}
+            if (node)
+                return iterator(node);
+            return iterator(_end);
+        }
+        iterator upper_bound(const key_type& key) {
+            iterator it = lower_bound(key);
+            if (it != _end && !_comp(it->first, key) && !_comp(key, it->first))
+                ++it;
+            return it;
+        }
+        const_iterator upper_bound(const key_type& key) const {
+            iterator it = lower_bound(key);
+            if (it != _end && !_comp(it->first, key) && !_comp(key, it->first))
+                ++it;
+            return it;
+        }
 
         // Observers
         key_compare key_comp() const { return _comp; }

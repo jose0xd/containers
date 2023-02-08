@@ -2,6 +2,9 @@
 #include "map.hpp"
 #include "utility.hpp"
 
+// #include <map>
+// #define ft std
+
 int main() {
     ft::map<int, int> m = ft::map<int, int>();
 
@@ -9,9 +12,9 @@ int main() {
     auto n2 = m.insert(ft::make_pair(42, 34));
     auto n3 = m.insert(ft::make_pair(1, 10));
 
-    std::cout << n1->value.first << " | " << n1->value.second << std::endl;
-    std::cout << n1->right->value.first << " | " << n1->right->value.second << std::endl;
-    std::cout << n1->left->value.first << " | " << n1->left->value.second << std::endl;
+    // std::cout << n1->value.first << " | " << n1->value.second << std::endl;
+    // std::cout << n1->right->value.first << " | " << n1->right->value.second << std::endl;
+    // std::cout << n1->left->value.first << " | " << n1->left->value.second << std::endl;
 
     int x = m.at(42);
     std::cout << "x: " << x << std::endl;
@@ -47,4 +50,18 @@ int main() {
     std::cout << "e->second: " << e->second << std::endl;
     std::cout << "f->second: " << f->second << std::endl;
     std::cout << "count(1): " << m.count(1) << ", count(3): " << m.count(3) << std::endl;
+
+    std::cout << "lower(10): " << m.lower_bound(10)->first << std::endl;
+    std::cout << "lower(2): " << m.lower_bound(2)->first << std::endl;
+    std::cout << "lower(42): " << m.lower_bound(42)->first << std::endl;
+    std::cout << "lower(43): " << m.lower_bound(43)->first << ", " << m.lower_bound(43)->second << std::endl;
+    std::cout << "upper(10): " << m.upper_bound(10)->first << std::endl;
+    std::cout << "upper(2): " << m.upper_bound(2)->first << std::endl;
+    std::cout << "upper(42): " << m.upper_bound(42)->first << std::endl;
+    std::cout << "upper(43): " << m.upper_bound(43)->first << ", " << m.upper_bound(43)->second << std::endl;
+
+    auto p = m.equal_range(1);
+    for (auto& q = p.first; q != p.second; ++q) {
+        std::cout << "m[" << q->first << "] = " << q->second << '\n';
+    }
 }
