@@ -155,11 +155,9 @@ namespace ft
         size_type max_size() const { return _alloc.max_size(); }
 
         // Modifiers
-        void clear();
-        // ft::pair<iterator, bool> insert(const value_type& value);
-        ///////
-		iterator insert(value_type value) {
-			tree_node *new_node = new tree_node(value, RED);
+        void clear() { erase(begin(), end()); }
+
+        ft::pair<iterator, bool> insert(const value_type& value) {
 			tree_node *parent = NULL;
 			tree_node *tmp = _root;
 			while (tmp) {
@@ -169,6 +167,11 @@ namespace ft
 				else
 					tmp = tmp->right;
 			}
+			if (parent && !_comp(value.first, parent->value.first)
+					&& !_comp(parent->value.first, value.first))
+				return ft::make_pair(iterator(parent), false);
+
+			tree_node *new_node = new tree_node(value, RED);
 			new_node->parent = parent;
 			if (!parent)
 				_root = new_node;
@@ -179,16 +182,33 @@ namespace ft
 					parent->right = new_node;
 			}
 			insert_fixup(new_node);
-			return iterator(new_node);
+			return ft::make_pair(iterator(new_node), true);
 		}
-        ////////
-        iterator insert(iterator pos, const value_type& value);
+
+        iterator insert(iterator pos, const value_type& value) {
+			(void) pos;
+			return insert(value).first;
+		}
+
         template <class InputIt>
-        void insert(InputIt first, InputIt last);
+        void insert(InputIt first, InputIt last) {
+			while (first != last) {
+				insert(*first);
+				first++;
+			}
+		}
+
         iterator erase(iterator pos);
         iterator erase(iterator first, iterator last);
         size_type erase(const key_type& key);
-        void swap(map& other);
+
+        void swap(map& other) {
+			swapAny(_root, other._root);
+			swapAny(_comp, other._comp);
+			swapAny(_alloc, other._alloc);
+			swapAny(_size, other._size);
+			swapAny(_end, other._end);
+		}
 
         // Lookup
         size_type count(const key_type& key) const { // ?? if call find get sgfault (loop mapIterator const conversion)
@@ -292,6 +312,13 @@ namespace ft
         value_compare value_comp() const { return value_compare(_comp); }
 
     private:
+		template <class Type>
+		void swapAny(Type& a, Type& b) {
+			Type tmp(a);
+			a = b;
+			b = tmp;
+		}
+
         void left_rotate(tree_node *node) {
             tree_node *tmp = node->right;
             node->right = tmp->left;

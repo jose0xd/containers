@@ -11,10 +11,12 @@ int main() {
     auto n1 = m.insert(ft::make_pair(2, 4));
     auto n2 = m.insert(ft::make_pair(42, 34));
     auto n3 = m.insert(ft::make_pair(1, 10));
+    auto n4 = m.insert(ft::make_pair(1, 83));
 
-    // std::cout << n1->value.first << " | " << n1->value.second << std::endl;
-    // std::cout << n1->right->value.first << " | " << n1->right->value.second << std::endl;
-    // std::cout << n1->left->value.first << " | " << n1->left->value.second << std::endl;
+    std::cout << n1.first->first << " | " << n1.first->second << ", " << n1.second << std::endl;
+    std::cout << n2.first->first << " | " << n2.first->second << ", " << n2.second << std::endl;
+    std::cout << n3.first->first << " | " << n3.first->second << ", " << n3.second << std::endl;
+    std::cout << n4.first->first << " | " << n4.first->second << ", " << n4.second << std::endl;
 
     int x = m.at(42);
     std::cout << "x: " << x << std::endl;
