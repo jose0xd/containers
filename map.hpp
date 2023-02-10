@@ -178,6 +178,7 @@ namespace ft
 				else
 					parent->right = new_node;
 			}
+			insert_fixup(new_node);
 			return iterator(new_node);
 		}
         ////////
@@ -289,6 +290,82 @@ namespace ft
         // Observers
         key_compare key_comp() const { return _comp; }
         value_compare value_comp() const { return value_compare(_comp); }
+
+    private:
+        void left_rotate(tree_node *node) {
+            tree_node *tmp = node->right;
+            node->right = tmp->left;
+            if (node->left)
+                node->left->parent = node;
+            tmp->parent = node->parent;
+            if (!node->parent)
+                _root = tmp;
+            else {
+                if (node == node->parent->left)
+                    node->parent->left = tmp;
+                else
+                    node->parent->right = tmp;
+            }
+            tmp->left = node;
+            node->parent = tmp;
+        }
+
+        void right_rotate(tree_node *node) {
+            tree_node *tmp = node->left;
+            node->left = tmp->right;
+            if (node->right)
+                node->right->parent = node;
+            tmp->parent = node->parent;
+            if (!node->parent)
+                _root = tmp;
+            else {
+                if (node == node->parent->right)
+                    node->parent->right = tmp;
+                else
+                    node->parent->left = tmp;
+            }
+            tmp->right = node;
+            node->parent = tmp;
+        }
+
+        void insert_fixup(tree_node *node) {
+            while (node->parent && node->parent->parent && node->parent->color == RED) {
+                if (node->parent == node->parent->parent->left) {
+                    tree_node *uncle = node->parent->parent->right;
+                    if (uncle && uncle->color == RED) {
+                        node->parent->color = BLACK;
+                        uncle->color = BLACK;
+                        node->parent->parent->color = RED;
+                        node = node->parent->parent;
+                    } else {
+                        if (node == node->parent->right) {
+                            node = node->parent;
+                            left_rotate(node);
+                        }
+                        node->parent->color = BLACK;
+                        node->parent->parent->color = RED;
+                        right_rotate(node->parent->parent);
+                    }
+                } else {
+                    tree_node *uncle = node->parent->parent->left;
+                    if (uncle && uncle->color == RED) {
+                        node->parent->color = BLACK;
+                        uncle->color = BLACK;
+                        node->parent->parent->color = RED;
+                        node = node->parent->parent;
+                    } else {
+                        if (node == node->parent->left) {
+                            node = node->parent;
+                            right_rotate(node);
+                        }
+                        node->parent->color = BLACK;
+                        node->parent->parent->color = RED;
+                        left_rotate(node->parent->parent);
+                    }
+                }
+            }
+            _root->color = BLACK;
+        }
     };
 
     // NON-MEMBER FUNCTIONS
