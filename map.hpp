@@ -126,8 +126,8 @@ namespace ft
         }
 
         // Iterators
-        iterator begin() { return iterator(_root->minimum(_root)); }
-        const_iterator begin() const { return const_iterator(_root->minimum(_root)); }
+        iterator begin() { return iterator(rbtNode<value_type>::minimum(_root)); }
+        const_iterator begin() const { return const_iterator(rbtNode<value_type>::minimum(_root)); }
         iterator end() {
             tree_node *last = _root->maximum(_root);
             if (last != _end) {
@@ -199,8 +199,43 @@ namespace ft
 		}
 
         iterator erase(iterator pos);
+
         iterator erase(iterator first, iterator last);
-        size_type erase(const key_type& key);
+        size_type erase(const key_type& key) {
+            tree_node *tmp;
+            tree_node *pos = search(key); // TODO rename pos
+            int original_color = pos->color;
+
+            if (!pos->left) {
+                tmp = pos->right;
+                std::cout << "pre transplant" << std::endl;
+                transplant(pos, pos->right);
+                std::cout << "post transplant" << std::endl;
+                // TODO deallocate u
+            } else if (!pos->right && pos->right != _end) {
+                tmp = pos->left;
+                transplant(pos, pos->left);
+                // TODO deallocate u
+            } else {
+                tree_node *next_node = pos->next();
+                original_color = next_node->color;
+                tmp = next_node->right;
+                if (next_node->parent == pos) {
+                    tmp->parent = next_node;
+                } else {
+                    transplant(next_node, next_node->right);
+                    next_node->right = pos->right;
+                    next_node->right->parent = next_node;
+                }
+                transplant(pos, next_node);
+                next_node->left = pos->left;
+                next_node->left->parent = next_node;
+                next_node->color = pos->color;
+            }
+            if (original_color == BLACK)
+                delete_fixup(tmp);
+            return 1; // TODO
+        }
 
         void swap(map& other) {
 			swapAny(_root, other._root);
@@ -224,28 +259,10 @@ namespace ft
             return 0;
         }
         iterator find(const key_type& key) {
-			tree_node *node = _root;
-			while (node && key != node->value.first) {
-				if (_comp(key, node->value.first))
-					node = node->left;
-				else
-					node = node->right;
-			}
-            if (node)
-                return iterator(node);
-            return iterator(_end);
+            return iterator(search(key));
         }
         const_iterator find(const key_type& key) const {
-			tree_node *node = _root;
-			while (node && key != node->value.first) {
-				if (_comp(key, node->value.first))
-					node = node->left;
-				else
-					node = node->right;
-			}
-            if (node)
-                return iterator(node);
-            return iterator(_end);
+            return const_iterator(search(key));
         }
 
         ft::pair<iterator, iterator> equal_range(const key_type& key) {
@@ -291,8 +308,8 @@ namespace ft
                 }
 			}
             if (node)
-                return iterator(node);
-            return iterator(_end);
+                return const_iterator(node);
+            return const_iterator(_end);
         }
         iterator upper_bound(const key_type& key) {
             iterator it = lower_bound(key);
@@ -319,6 +336,18 @@ namespace ft
 			b = tmp;
 		}
 
+        tree_node *search(const key_type& key) {
+			tree_node *node = _root;
+			while (node && key != node->value.first) {
+				if (_comp(key, node->value.first))
+					node = node->left;
+				else
+					node = node->right;
+			}
+            return node ? node : _end;
+        }
+
+        // INSERT HELPERS
         void left_rotate(tree_node *node) {
             tree_node *tmp = node->right;
             node->right = tmp->left;
@@ -392,6 +421,82 @@ namespace ft
                 }
             }
             _root->color = BLACK;
+        }
+
+        // DELETE HELPERS
+        void transplant(tree_node *u, tree_node *v) {
+            std::cout << "transplant. u: " << u->value.first << std::endl;
+            std::cout << "u.parent: " << u->parent->value.first << std::endl;
+            if (!u->parent)
+                _root = v;
+            else if (u == u->parent->left)
+                u->parent->left = v;
+            else
+                u->parent->right = v;
+            v->parent = u->parent;
+        }
+
+        void delete_fixup(tree_node *node) {
+            while (node != _root && node->color == BLACK) {
+                if (node == node->parent->left) {
+                    tree_node *sibling = node->parent->right;
+                    // type 1
+                    if (sibling->color == RED) {
+                        sibling->color = BLACK;
+                        node->parent->color = RED;
+                        left_rotate(node->parent);
+                        sibling = node->parent->right;
+                    }
+                    // type 2
+                    if (sibling->left->color == BLACK && sibling->right->color == BLACK) {
+                        sibling->color = RED;
+                        node = node->parent;
+                    } else {
+                        // type 3
+                        if (sibling->right->color == BLACK) {
+                            sibling->left->color = BLACK;
+                            sibling->color = RED;
+                            right_rotate(sibling);
+                            sibling = node->parent->right;
+                        }
+                        // type 4
+                        sibling->color = node->parent->color;
+                        node->parent->color = BLACK;
+                        sibling->right->color = BLACK;
+                        left_rotate(node->parent);
+                        node = _root;
+                    }
+                } else {
+                    tree_node *sibling = node->parent->left;
+                    // type 1
+                    if (sibling->color == RED) {
+                        sibling->color = BLACK;
+                        node->parent->color = RED;
+                        left_rotate(node->parent);
+                        sibling = node->parent->left;
+                    }
+                    // type 2
+                    if (sibling->right->color == BLACK && sibling->left->color == BLACK) {
+                        sibling->color = RED;
+                        node = node->parent;
+                    } else {
+                        // type 3
+                        if (sibling->left->color == BLACK) {
+                            sibling->right->color = BLACK;
+                            sibling->color = RED;
+                            right_rotate(sibling);
+                            sibling = node->parent->left;
+                        }
+                        // type 4
+                        sibling->color = node->parent->color;
+                        node->parent->color = BLACK;
+                        sibling->left->color = BLACK;
+                        left_rotate(node->parent);
+                        node = _root;
+                    }
+                }
+            }
+            node->color = BLACK;
         }
     };
 

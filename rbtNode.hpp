@@ -30,14 +30,14 @@ namespace ft
 			color = other.color;
 		}
 
-		rbtNode *minimum(rbtNode *n) {
+		static rbtNode *minimum(rbtNode *n) {
 			if (!n)
 				return NULL;
 			while (n->left)
 				n = n->left;
 			return n;
 		}
-		rbtNode *maximum(rbtNode *n) {
+		static rbtNode *maximum(rbtNode *n) {
 			if (!n)
 				return NULL;
 			while (n->right)

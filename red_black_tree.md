@@ -108,7 +108,7 @@ elif z.right == self.NIL:
 # case 3
 else:
     y = self.minimum(z.right)
-    y_origin_color = y.color
+    y_orig_color = y.color
     x = y.right
     if y.p == z:
         x.p = y
