@@ -22,7 +22,8 @@ int main() {
     std::cout << n3.first->first << " | " << n3.first->second << ", " << n3.second << std::endl;
     std::cout << n4.first->first << " | " << n4.first->second << ", " << n4.second << std::endl;
 
-    m.erase(2);
+    m.erase(n1.first, n2.first);
+    m.erase(8);
     m.print();
 
     int x = m.at(42);
@@ -39,10 +40,10 @@ int main() {
     std::cout << "it second: " << it->second << std::endl;
     it++;
     std::cout << "it first: " << it->first << std::endl;
-    it++;
-    std::cout << "it first: " << it->first << std::endl;
-    it++;
-    std::cout << "it first: " << it->first << std::endl;
+    // it++;
+    // std::cout << "it first: " << it->first << std::endl;
+    // it++;
+    // std::cout << "it first: " << it->first << std::endl;
 
     std::cout << "it == m.end(): " << (it == m.end()) << std::endl;
     std::cout << "it == last: " << (it == last) << std::endl;

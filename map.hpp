@@ -201,12 +201,30 @@ namespace ft
 			}
 		}
 
-        iterator erase(iterator pos);
+        iterator erase(iterator pos) {
+            iterator last = pos;
+            last++;
+            erase(pos->first);
+            return last;
+        }
 
-        iterator erase(iterator first, iterator last);
+        iterator erase(iterator first, iterator last) {
+            while (first != last) {
+                key_type key = first->first;
+                std::cout << "key: " << key << std::endl;
+                first++;
+                std::cout << "it: " << first->first << ", first == last: " << (first == last) << std::endl;
+                print();
+                erase(key);
+                std::cout << "borrado" << std::endl;
+            }
+            return last;
+        }
+
         size_type erase(const key_type& key) {
             tree_node *tmp;
             tree_node *pos = search(key); // TODO rename pos
+            if (pos == _end) { return 0; }
             int original_color = pos->color;
 
             if (!pos->left) {
@@ -222,7 +240,7 @@ namespace ft
                 original_color = next_node->color;
                 tmp = next_node->right;
                 if (next_node->parent == pos) {
-                    tmp->parent = next_node;
+                    if (tmp) { tmp->parent = next_node; }
                 } else {
                     transplant(next_node, next_node->right);
                     next_node->right = pos->right;
@@ -233,9 +251,9 @@ namespace ft
                 next_node->left->parent = next_node;
                 next_node->color = pos->color;
             }
-            if (original_color == BLACK)
+            if (original_color == BLACK && tmp)
                 delete_fixup(tmp);
-            return 1; // TODO
+            return 1;
         }
 
         void swap(map& other) {
