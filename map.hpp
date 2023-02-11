@@ -95,6 +95,7 @@ namespace ft
             _alloc = other._alloc;
             _size = other._size;
             insert(other.begin(), other.end());
+            return *this;
         }
 
         allocator_type get_allocator() const { return _alloc; }
@@ -367,7 +368,7 @@ namespace ft
 			b = tmp;
 		}
 
-        tree_node *search(const key_type& key) {
+        tree_node *search(const key_type& key) const {
 			tree_node *node = _root;
 			while (node && key != node->value.first) {
 				if (_comp(key, node->value.first))
