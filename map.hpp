@@ -5,6 +5,7 @@
 #include <iostream>
 #include <deque>
 ////
+//#include <limits>
 
 # include <memory>
 # include <functional>
@@ -38,7 +39,6 @@ namespace ft
         typedef ft::mapIterator<value_type>             const_iterator; // TODO: const value_type fails
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
-		typedef rbtNode<value_type>						tree_node;
 
         // MEMBER CLASSES
         class value_compare
@@ -58,9 +58,12 @@ namespace ft
         };
 
     private:
+		typedef rbtNode<value_type>						                tree_node;
+        typedef typename Allocator::template rebind<tree_node>::other   node_alloc;
+
         tree_node		*_root;
         key_compare		_comp;
-        allocator_type	_alloc;
+        node_alloc      _alloc;
         size_type       _size;
         tree_node       *_end;
         // TODO: add _begin to return it in constant time
@@ -339,7 +342,7 @@ namespace ft
             return it;
         }
         const_iterator upper_bound(const key_type& key) const {
-            iterator it = lower_bound(key);
+            const_iterator it = lower_bound(key);
             if (it != _end && !_comp(it->first, key) && !_comp(key, it->first))
                 ++it;
             return it;
