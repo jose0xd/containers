@@ -80,10 +80,14 @@ namespace ft
             const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type())
             : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {
+            _end = new tree_node();
+            _end->parent = _root;
             insert(first, last);
         }
 
         map(const map& other) : _root(NULL), _comp(other._comp), _alloc(other._alloc), _size(0) {
+            _end = new tree_node();
+            _end->parent = _root;
             insert(other.begin(), other.end());
         }
 
@@ -93,7 +97,7 @@ namespace ft
             _root = NULL;
             _comp = other._comp;
             _alloc = other._alloc;
-            _size = other._size;
+            _size = 0;
             insert(other.begin(), other.end());
             return *this;
         }
@@ -134,7 +138,7 @@ namespace ft
         const_iterator begin() const { return const_iterator(rbtNode<value_type>::minimum(_root)); }
         iterator end() {
             tree_node *last = _root->maximum(_root);
-            if (last != _end) {
+            if (last && last != _end) {
                 _end->parent = last;
                 last->right = _end;
             }
@@ -142,7 +146,7 @@ namespace ft
         }
         const_iterator end() const {
             tree_node *last = _root->maximum(_root);
-            if (last != _end) {
+            if (last && last != _end) {
                 _end->parent = last;
                 last->right = _end;
             }
@@ -228,11 +232,9 @@ namespace ft
             if (!pos->left) {
                 tmp = pos->right;
                 transplant(pos, pos->right);
-                // TODO deallocate u
             } else if (!pos->right && pos->right != _end) {
                 tmp = pos->left;
                 transplant(pos, pos->left);
-                // TODO deallocate u
             } else {
                 tree_node *next_node = pos->next();
                 original_color = next_node->color;
@@ -249,7 +251,8 @@ namespace ft
                 next_node->left->parent = next_node;
                 next_node->color = pos->color;
             }
-            if (original_color == BLACK && tmp)
+            // TODO deallocate pos
+            if (original_color == BLACK && tmp && tmp != _end)
                 delete_fixup(tmp);
             _size--;
             return 1;
@@ -385,8 +388,8 @@ namespace ft
         void left_rotate(tree_node *node) {
             tree_node *tmp = node->right;
             node->right = tmp->left;
-            if (node->left)
-                node->left->parent = node;
+            if (tmp->left)
+                tmp->left->parent = node;
             tmp->parent = node->parent;
             if (!node->parent)
                 _root = tmp;
@@ -403,8 +406,8 @@ namespace ft
         void right_rotate(tree_node *node) {
             tree_node *tmp = node->left;
             node->left = tmp->right;
-            if (node->right)
-                node->right->parent = node;
+            if (tmp->right)
+                tmp->right->parent = node;
             tmp->parent = node->parent;
             if (!node->parent)
                 _root = tmp;
