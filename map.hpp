@@ -165,15 +165,15 @@ namespace ft
 			tree_node *parent = NULL;
 			tree_node *tmp = _root;
 			while (tmp && tmp != _end) {
+                if (!_comp(value.first, tmp->value.first) && !_comp(tmp->value.first, value.first))
+                    return ft::make_pair(iterator(tmp), false);
+
 				parent = tmp;
 				if (_comp(value.first, tmp->value.first))
 					tmp = tmp->left;
 				else
 					tmp = tmp->right;
 			}
-			if (parent && !_comp(value.first, parent->value.first)
-					&& !_comp(parent->value.first, value.first))
-				return ft::make_pair(iterator(parent), false);
 
 			tree_node *new_node = new tree_node(value, RED);
 			new_node->parent = parent;
@@ -186,6 +186,7 @@ namespace ft
 					parent->right = new_node;
 			}
 			insert_fixup(new_node);
+            _size++;
 			return ft::make_pair(iterator(new_node), true);
 		}
 
@@ -250,6 +251,7 @@ namespace ft
             }
             if (original_color == BLACK && tmp)
                 delete_fixup(tmp);
+            _size--;
             return 1;
         }
 
