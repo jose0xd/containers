@@ -9,21 +9,26 @@ int main() {
     ft::map<int, int> m = ft::map<int, int>();
 
     auto n1 = m.insert(ft::make_pair(2, 4));
+    m.print();
     auto n2 = m.insert(ft::make_pair(42, 34));
+    m.print();
     auto n3 = m.insert(ft::make_pair(1, 10));
+    m.print();
     auto n4 = m.insert(ft::make_pair(5, 83));
+    m.print();
 
     std::cout << n1.first->first << " | " << n1.first->second << ", " << n1.second << std::endl;
     std::cout << n2.first->first << " | " << n2.first->second << ", " << n2.second << std::endl;
     std::cout << n3.first->first << " | " << n3.first->second << ", " << n3.second << std::endl;
     std::cout << n4.first->first << " | " << n4.first->second << ", " << n4.second << std::endl;
 
-    m.erase(5);
+    m.erase(2);
+    m.print();
 
     int x = m.at(42);
     std::cout << "x: " << x << std::endl;
-    const int y = m.at(2);
-    std::cout << "y: " << y << std::endl;
+    // const int y = m.at(2);
+    // std::cout << "y: " << y << std::endl;
     // m.at(3);
     auto it = m.begin();
     auto last = m.end();

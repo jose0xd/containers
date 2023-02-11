@@ -1,7 +1,10 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
+// TODO
 #include <iostream>
+#include <deque>
+////
 
 # include <memory>
 # include <functional>
@@ -208,9 +211,7 @@ namespace ft
 
             if (!pos->left) {
                 tmp = pos->right;
-                std::cout << "pre transplant" << std::endl;
                 transplant(pos, pos->right);
-                std::cout << "post transplant" << std::endl;
                 // TODO deallocate u
             } else if (!pos->right && pos->right != _end) {
                 tmp = pos->left;
@@ -328,6 +329,21 @@ namespace ft
         key_compare key_comp() const { return _comp; }
         value_compare value_comp() const { return value_compare(_comp); }
 
+        // TODO: Remove
+        void print() const {
+            std::deque<tree_node*> queue;
+            queue.push_back(_root);
+
+            while (!queue.empty()) {
+                tree_node *node = queue.front();
+                std::cout << node->value.first << " c: " << node->color << std::endl;
+                if (node->left) queue.push_back(node->left);
+                if (node->right) queue.push_back(node->right);
+                queue.pop_front();
+            }
+            std::cout << std::endl;
+        }
+
     private:
 		template <class Type>
 		void swapAny(Type& a, Type& b) {
@@ -425,15 +441,15 @@ namespace ft
 
         // DELETE HELPERS
         void transplant(tree_node *u, tree_node *v) {
-            std::cout << "transplant. u: " << u->value.first << std::endl;
-            std::cout << "u.parent: " << u->parent->value.first << std::endl;
             if (!u->parent)
                 _root = v;
             else if (u == u->parent->left)
                 u->parent->left = v;
             else
                 u->parent->right = v;
-            v->parent = u->parent;
+
+            if (v)
+                v->parent = u->parent;
         }
 
         void delete_fixup(tree_node *node) {
