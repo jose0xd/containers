@@ -163,7 +163,7 @@ namespace ft
         ft::pair<iterator, bool> insert(const value_type& value) {
 			tree_node *parent = NULL;
 			tree_node *tmp = _root;
-			while (tmp) {
+			while (tmp && tmp != _end) {
 				parent = tmp;
 				if (_comp(value.first, tmp->value.first))
 					tmp = tmp->left;
@@ -211,12 +211,8 @@ namespace ft
         iterator erase(iterator first, iterator last) {
             while (first != last) {
                 key_type key = first->first;
-                std::cout << "key: " << key << std::endl;
                 first++;
-                std::cout << "it: " << first->first << ", first == last: " << (first == last) << std::endl;
-                print();
                 erase(key);
-                std::cout << "borrado" << std::endl;
             }
             return last;
         }
@@ -354,7 +350,8 @@ namespace ft
 
             while (!queue.empty()) {
                 tree_node *node = queue.front();
-                std::cout << node->value.first << " c: " << node->color << std::endl;
+                std::cout << node->value.first << " | " << node->value.second
+                    << " c: " << node->color << std::endl;
                 if (node->left) queue.push_back(node->left);
                 if (node->right) queue.push_back(node->right);
                 queue.pop_front();

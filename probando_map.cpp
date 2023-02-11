@@ -109,4 +109,14 @@ int main() {
     std::cout << "alice <= eve returns " << (alice <= eve) << '\n';
     std::cout << "alice >  eve returns " << (alice > eve) << '\n';
     std::cout << "alice >= eve returns " << (alice >= eve) << '\n';
+
+    /////
+    ft::map<int, std::string> mp;
+    typedef ft::map<int, std::string>::value_type PAIR;
+    mp.insert(PAIR(42, "lol"));
+    mp.print();
+    mp.insert(PAIR(42, "mdr"));
+    mp.print();
+    mp.insert(PAIR(50, "mdr"));
+    mp.print();
 }
