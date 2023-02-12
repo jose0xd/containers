@@ -36,7 +36,7 @@ namespace ft
         typedef typename Allocator::pointer             pointer;
         typedef typename Allocator::const_pointer       const_pointer;
         typedef ft::mapIterator<value_type>             iterator;
-        typedef ft::mapIterator<value_type>             const_iterator; // TODO: const value_type fails
+        typedef ft::mapIterator<const value_type>       const_iterator;
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
@@ -59,6 +59,7 @@ namespace ft
 
     private:
 		typedef rbtNode<value_type>						                tree_node;
+		typedef rbtNode<const value_type>						        const_tree_node;
         typedef typename Allocator::template rebind<tree_node>::other   node_alloc;
 
         tree_node		*_root;
@@ -138,7 +139,9 @@ namespace ft
 
         // Iterators
         iterator begin() { return iterator(rbtNode<value_type>::minimum(_root)); }
-        const_iterator begin() const { return const_iterator(rbtNode<value_type>::minimum(_root)); }
+        const_iterator begin() const {
+            return const_iterator((const_tree_node*)rbtNode<value_type>::minimum(_root));
+        }
         iterator end() {
             tree_node *last = _root->maximum(_root);
             if (last && last != _end) {
@@ -153,7 +156,7 @@ namespace ft
                 _end->parent = last;
                 last->right = _end;
             }
-            return const_iterator(_end);
+            return const_iterator((const_tree_node*)_end);
         }
         reverse_iterator rbegin() { return reverse_iterator(end()); }
         const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
@@ -270,7 +273,7 @@ namespace ft
 		}
 
         // Lookup
-        size_type count(const key_type& key) const { // ?? if call find get sgfault (loop mapIterator const conversion)
+        size_type count(const key_type& key) const {
 			tree_node *node = _root;
 			while (node && key != node->value.first) {
 				if (_comp(key, node->value.first))
@@ -286,7 +289,7 @@ namespace ft
             return iterator(search(key));
         }
         const_iterator find(const key_type& key) const {
-            return const_iterator(search(key));
+            return const_iterator((const_tree_node*)search(key));
         }
 
         ft::pair<iterator, iterator> equal_range(const key_type& key) {
@@ -332,8 +335,8 @@ namespace ft
                 }
 			}
             if (node)
-                return const_iterator(node);
-            return const_iterator(_end);
+                return const_iterator((const_tree_node*)node);
+            return const_iterator((const_tree_node*)_end);
         }
         iterator upper_bound(const key_type& key) {
             iterator it = lower_bound(key);
@@ -343,7 +346,8 @@ namespace ft
         }
         const_iterator upper_bound(const key_type& key) const {
             const_iterator it = lower_bound(key);
-            if (it != _end && !_comp(it->first, key) && !_comp(key, it->first))
+            const_tree_node *the_end = (const_tree_node*)_end;
+            if (it != the_end && !_comp(it->first, key) && !_comp(key, it->first))
                 ++it;
             return it;
         }

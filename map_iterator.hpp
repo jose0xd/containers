@@ -38,7 +38,10 @@ namespace ft
 		}
 
 		// const conversion
-		operator mapIterator<const T>() const { return mapIterator<const T>(_ptr); }
+		operator mapIterator<const T>() const {
+			struct rbtNode<const T> *ptr = (struct rbtNode<const T>*) _ptr;
+			return mapIterator<const T>(ptr);
+		}
 
 		reference operator*() const { return _ptr->value; }
 		pointer operator->() const { return &(_ptr->value); }
