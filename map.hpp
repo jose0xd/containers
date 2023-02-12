@@ -75,7 +75,8 @@ namespace ft
         explicit map(const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type())
             : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {
-            _end = new tree_node();
+            _end = _alloc.allocate(1);
+            _alloc.construct(_end, value_type());
             _end->parent = _root;
         }
 
@@ -84,18 +85,25 @@ namespace ft
             const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type())
             : _root(NULL), _comp(comp), _alloc(alloc), _size(0) {
-            _end = new tree_node();
+            _end = _alloc.allocate(1);
+            _alloc.construct(_end, value_type());
             _end->parent = _root;
             insert(first, last);
         }
 
         map(const map& other) : _root(NULL), _comp(other._comp), _alloc(other._alloc), _size(0) {
-            _end = new tree_node();
+            _end = _alloc.allocate(1);
+            _alloc.construct(_end, value_type());
             _end->parent = _root;
             insert(other.begin(), other.end());
         }
 
-        ~map() {} // TODO: delete
+        ~map() {
+            if (_size)
+                clear();
+            _alloc.destroy(_end);
+            _alloc.deallocate(_end, 1);
+        }
 
         map& operator=(const map& other) {
             _root = NULL;
@@ -185,7 +193,9 @@ namespace ft
 					tmp = tmp->right;
 			}
 
-			tree_node *new_node = new tree_node(value, RED);
+            tree_node *new_node = _alloc.allocate(1);
+            _alloc.construct(new_node, value);
+            new_node->color = RED;
 			new_node->parent = parent;
 			if (!parent)
 				_root = new_node;
@@ -257,7 +267,8 @@ namespace ft
                 next_node->left->parent = next_node;
                 next_node->color = pos->color;
             }
-            // TODO deallocate pos
+            _alloc.destroy(pos);
+            _alloc.deallocate(pos, 1);
             if (original_color == BLACK && tmp && tmp != _end)
                 delete_fixup(tmp);
             _size--;

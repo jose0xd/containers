@@ -28,6 +28,8 @@ namespace ft
 			left = other.left;
 			right = other.right;
 			color = other.color;
+
+			return *this;
 		}
 
 		static rbtNode *minimum(rbtNode *n) {
