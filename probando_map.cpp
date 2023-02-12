@@ -1,11 +1,18 @@
 #include <iostream>
 #include "map.hpp"
 #include "utility.hpp"
+#include <stdlib.h>
 
 // #include <map>
 // #define ft std
 
+void leaks() {
+    system("leaks -q a.out");
+}
+
 int main() {
+    atexit(leaks);
+
     ft::map<int, int> m = ft::map<int, int>();
 
     auto n1 = m.insert(ft::make_pair(2, 4));
