@@ -1,11 +1,11 @@
 #ifndef SET_HPP
 # define SET_HPP
 
-// TODO
-#include <iostream>
-#include <deque>
-////
-//#include <limits>
+// For print the red black tree
+# if DEBUG
+#  include <iostream>
+#  include <deque>
+# endif
 
 # include <memory>
 # include <functional>
@@ -195,7 +195,7 @@ namespace ft
 
         size_type erase(const key_type& key) {
             tree_node *tmp;
-            tree_node *pos = search(key); // TODO rename pos
+            tree_node *pos = search(key);
             if (pos == _end) { return 0; }
             int original_color = pos->color;
 
@@ -264,44 +264,20 @@ namespace ft
             return make_pair(lower_bound(key), upper_bound(key));
         }
         iterator lower_bound(const key_type& key) {
-			tree_node *node = _root;
-			while (node && key != node->value) {
-				if (_comp(key, node->value)) {
-                    if (node->left)
-                        node = node->left;
-                    else
-                        break;
-                }
-				else {
-                    if (node->right)
-                        node = node->right;
-                    else
-                        break;
-                }
-			}
-            if (node)
-                return iterator(node);
-            return iterator(_end);
+            iterator it = begin();
+            for (; it != end(); it++) {
+                if (!_comp(*it, key))
+                    break;
+            }
+            return it;
         }
         const_iterator lower_bound(const key_type& key) const {
-			tree_node *node = _root;
-			while (node && key != node->value) {
-				if (_comp(key, node->value)) {
-                    if (node->left)
-                        node = node->left;
-                    else
-                        break;
-                }
-				else {
-                    if (node->right)
-                        node = node->right;
-                    else
-                        break;
-                }
-			}
-            if (node)
-                return const_iterator((const_tree_node*)node);
-            return const_iterator((const_tree_node*)_end);
+            const_iterator it = begin();
+            for (; it != end(); it++) {
+                if (!_comp(*it, key))
+                    break;
+            }
+            return it;
         }
         iterator upper_bound(const key_type& key) {
             iterator it = lower_bound(key);
@@ -321,7 +297,8 @@ namespace ft
         key_compare key_comp() const { return _comp; }
         value_compare value_comp() const { return value_compare(_comp); }
 
-        // TODO: Remove
+# if DEBUG
+// For print the red black tree
         void print() const {
             std::deque<tree_node*> queue;
             queue.push_back(_root);
@@ -336,6 +313,7 @@ namespace ft
             }
             std::cout << std::endl;
         }
+# endif
 
     private:
 		template <class Type>
