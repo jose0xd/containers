@@ -14,6 +14,13 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CXX) $(OBJ) -o $(NAME)
 
+test-utils: tests/test_utilities.cpp
+	$(CXX) $(CXXFLAGS) tests/test_utilities.cpp -o ft-utils
+	$(CXX) -Wall -Wextra -Werror tests/test_utilities.cpp -DREAL_STL -o std-utils
+	./ft-utils > ft.out
+	./std-utils > std.out
+	vimdiff ft.out std.out
+
 clean:
 	rm -f $(OBJ)
 

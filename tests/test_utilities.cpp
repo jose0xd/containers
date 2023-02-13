@@ -6,20 +6,22 @@
 	#include <utility>
 	namespace ft = std;
 #else
-	#include "algorithm.hpp"
-	#include "type_traits.hpp"
-	#include "utility.hpp"
+	#include "../utils/algorithm.hpp"
+	#include "../utils/type_traits.hpp"
+	#include "../utils/utility.hpp"
 #endif
 
 template <typename T>
-void check_int(T n, typename ft::enable_if<ft::is_integral<T>::value>::type* = nullptr)
+void check_int(T n, typename ft::enable_if<ft::is_integral<T>::value>::type* = NULL)
 {
+	(void)n;
 	std::cout << "It's integral\n";
 }
 
 template <typename T>
-void check_int(T n, typename ft::enable_if<!ft::is_integral<T>::value>::type* = nullptr)
+void check_int(T n, typename ft::enable_if<!ft::is_integral<T>::value>::type* = NULL)
 {
+	(void)n;
 	std::cout << "It's not integral\n";
 }
 
@@ -39,8 +41,8 @@ int main()
 	{
 		bool				b = true;
 		char				c = 'a';
-		char16_t			c16 = 'a';
-		char32_t			c32 = 'a';
+		// char16_t			c16 = 'a';
+		// char32_t			c32 = 'a';
 		wchar_t				wc = 'a';
 		short				s = 0;
 		int					i = 0;
@@ -60,8 +62,8 @@ int main()
 
 		check_int(b);
 		check_int(c);
-		check_int(c16);
-		check_int(c32);
+		// check_int(c16);
+		// check_int(c32);
 		check_int(wc);
 		check_int(s);
 		check_int(i);
