@@ -2,26 +2,48 @@
 # define MAP_ITERATOR_HPP
 
 # include <iterator> // for std::bidirectional_iterator_tag
-# include <cstddef>
+# include <cstddef>  // for std::ptrdiff_t
 # include "../utils/rbtNode.hpp"
+# include "../utils/type_traits.hpp"
 
 namespace ft
 {
-	template <typename T>
-	class mapIterator
+	template <class T>
+	struct ft::iterator_traits<T*>
 	{
-		// MEMBER TYPES
-	public:
 		typedef std::ptrdiff_t					difference_type;
 		typedef T								value_type;
 		typedef T*								pointer;
 		typedef T&								reference;
 		typedef std::bidirectional_iterator_tag	iterator_category;
-		typedef struct rbtNode<T>				node_type;
-		typedef node_type*						node_pointer;
+	};
+
+	template <class T>
+	struct ft::iterator_traits<const T*>
+	{
+		typedef std::ptrdiff_t					difference_type;
+		typedef T								value_type;
+		typedef const T*						pointer;
+		typedef const T&						reference;
+		typedef std::bidirectional_iterator_tag	iterator_category;
+	};
+
+	template <typename T>
+	class mapIterator
+	{
+		// MEMBER TYPES
+	public:
+		typedef typename ft::iterator_traits<T*>::value_type		value_type;
+		typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
+		typedef typename ft::iterator_traits<T*>::pointer			pointer;
+		typedef typename ft::iterator_traits<T*>::reference			reference;
+		typedef typename ft::iterator_traits<T*>::iterator_category	iterator_category;
 
 		// DATA MEMBERS
 	private:
+		typedef struct rbtNode<T>	node_type;
+		typedef node_type*			node_pointer;
+
 		node_pointer _ptr;
 
 		// MEMBER FUNCTIONS

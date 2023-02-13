@@ -3,6 +3,19 @@
 
 namespace ft
 {
+	/**
+	 * ITERATOR_TRAITS
+	 */
+	template <class Iter>
+	struct iterator_traits
+	{
+		typedef typename Iter::difference_type		difference_type;
+		typedef typename Iter::value_type			value_type;
+		typedef typename Iter::pointer				pointer;
+		typedef typename Iter::reference			reference;
+		typedef typename Iter::iterator_category	iterator_category;
+	};
+
 	// ENABLE_IF
 	template <bool B, class T = void>
 	struct enable_if {};
@@ -58,7 +71,6 @@ namespace ft
 
 	template <>
 	struct is_integral<unsigned long long> { static const bool value = true; };
-
 }
 
 #endif
