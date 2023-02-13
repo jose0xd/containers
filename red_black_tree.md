@@ -130,3 +130,58 @@ w is the sibling of x
 2. w is black, and w.left & w.right are black
 3. w is black, and w.left is red and w.right is black
 4. w is black, and w.right is red
+
+```python
+while x != self.root and x.color == BLACK:
+    if x == x.p.left:
+        w = x.p.right
+        # type 1
+        if w.color == RED:
+            w.color = BLACK
+            x.p.color = RED
+            self.left_rotate(x.p)
+            w = x.p.right
+        # type 2
+        if w.left.color == BLACK and w.right.color == BLACK:
+            w.color = RED 
+            x = x.p 
+        else:
+            # type 3
+            if w.right.color == BLACK:
+                w.left.color = BLACK
+                w.color = RED
+                self.right_rotate(w)
+                w = x.p.right
+            # type 4
+            w.color = x.p.color 
+            x.p.color = BLACK 
+            w.right.color = BLACK 
+            self.left_rotate(x.p)
+            x = self.root
+    else:
+        w = x.p.left
+        # type 1
+        if w.color == RED:
+            w.color = BLACK
+            x.p.color = RED
+            self.right_rotate(x.p)
+            w = x.p.left
+        # type 2
+        if w.right.color == BLACK and w.left.color == BLACK:
+            w.color = RED 
+            x = x.p 
+        else:
+            # type 3
+            if w.left.color == BLACK:
+                w.right.color = BLACK
+                w.color = RED
+                self.left_rotate(w)
+                w = x.p.left
+            # type 4
+            w.color = x.p.color 
+            x.p.color = BLACK 
+            w.left.color = BLACK 
+            self.right_rotate(x.p)
+            x = self.root
+x.color = BLACK
+```

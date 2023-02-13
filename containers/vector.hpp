@@ -2,10 +2,10 @@
 # define VECTOR_HPP
 
 # include <memory>
-# include "algorithm.hpp"
-# include "vector_iterator.hpp"
-# include "reverse_iterator.hpp"
-# include "type_traits.hpp"
+# include "../iterators/vector_iterator.hpp"
+# include "../iterators/reverse_iterator.hpp"
+# include "../utils/algorithm.hpp"
+# include "../utils/type_traits.hpp"
 
 namespace ft
 {
@@ -22,8 +22,8 @@ namespace ft
 		typedef const value_type&								const_reference;
 		typedef value_type*										pointer;
 		typedef const value_type*								const_pointer;
-		typedef ft::vectorIterator<T>					iterator;
-		typedef ft::vectorIterator<const T>			const_iterator;
+		typedef ft::vectorIterator<T>							iterator;
+		typedef ft::vectorIterator<const T>						const_iterator;
 		typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
 		typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 

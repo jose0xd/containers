@@ -5,3 +5,5 @@ a.out
 *.swp
 prueba*
 *test
+qing_test.cpp
+containers_test/

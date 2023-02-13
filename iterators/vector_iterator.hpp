@@ -2,7 +2,7 @@
 # define VECTOR_ITERATOR_HPP
 
 # include <iterator> // for std::random_access_iterator_tag
-# include <cstddef>
+# include <cstddef>  // for std::ptrdiff_t
 
 namespace ft
 {
@@ -34,8 +34,8 @@ namespace ft
 			return *this;
 		}
 
- 		// const conversion
- 		operator vectorIterator<const T>() const { return vectorIterator<const T>(_ptr); }
+		// const conversion
+		operator vectorIterator<const T>() const { return vectorIterator<const T>(_ptr); }
 
 		reference operator*() const { return *this->_ptr; }
 		pointer operator->() const { return this->_ptr; }
