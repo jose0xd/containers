@@ -9,7 +9,7 @@
 namespace ft
 {
 	template <class T>
-	struct ft::iterator_traits<T*>
+	struct iterator_traits<T*>
 	{
 		typedef std::ptrdiff_t					difference_type;
 		typedef T								value_type;
@@ -19,7 +19,7 @@ namespace ft
 	};
 
 	template <class T>
-	struct ft::iterator_traits<const T*>
+	struct iterator_traits<const T*>
 	{
 		typedef std::ptrdiff_t					difference_type;
 		typedef T								value_type;
