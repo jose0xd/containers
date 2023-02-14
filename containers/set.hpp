@@ -100,9 +100,17 @@ namespace ft
 		allocator_type get_allocator() const { return _alloc; }
 
 		// Iterators
-		iterator begin() { return iterator(tree_node::minimum(_root)); }
+		iterator begin() {
+			tree_node *b = tree_node::minimum(_root);
+			if (b)
+				return iterator(b);
+			return iterator(_end);
+		}
 		const_iterator begin() const {
-			return const_iterator((const_tree_node*)tree_node::minimum(_root));
+			tree_node *b = tree_node::minimum(_root);
+			if (b)
+				return const_iterator((const_tree_node*)b);
+			return const_iterator((const_tree_node*)_end);
 		}
 		iterator end() {
 			tree_node *last = _root->maximum(_root);

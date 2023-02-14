@@ -10,7 +10,7 @@
 	#include "../containers/stack.hpp"
 #endif
 
-int main()
+void test_stack()
 {
     ft::stack<std::string, std::list<std::string> > s1;
     ft::vector<int> vec(5, 2);

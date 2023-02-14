@@ -12,30 +12,30 @@
 #endif
 
 template <typename T>
-void check_int(T n, typename ft::enable_if<ft::is_integral<T>::value>::type* = NULL)
+static void check_int(T n, typename ft::enable_if<ft::is_integral<T>::value>::type* = NULL)
 {
 	(void)n;
 	std::cout << "It's integral\n";
 }
 
 template <typename T>
-void check_int(T n, typename ft::enable_if<!ft::is_integral<T>::value>::type* = NULL)
+static void check_int(T n, typename ft::enable_if<!ft::is_integral<T>::value>::type* = NULL)
 {
 	(void)n;
 	std::cout << "It's not integral\n";
 }
 
-bool binary_pred(int a, int b)
+static bool binary_pred(int a, int b)
 {
 	return a == b;
 }
 
-bool binary_comp(char a, char b)
+static bool binary_comp(char a, char b)
 {
 	return a < b;
 }
 
-int main()
+void test_utilities()
 {
 	// ENABLE_IF & IS_INTEGRAL
 	{

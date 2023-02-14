@@ -9,7 +9,7 @@
 #endif
 
 template <typename T>
-void print(ft::vector<T> v, std::string title = "") {
+static void print(ft::vector<T> v, std::string title = "") {
     std::cout << title << std::endl;
     for (typename ft::vector<T>::iterator it = v.begin(); it != v.end(); it++)
         std::cout << *it << ", ";
@@ -17,14 +17,14 @@ void print(ft::vector<T> v, std::string title = "") {
 }
 
 template <typename T>
-void rprint(ft::vector<T> v, std::string title = "") {
+static void rprint(ft::vector<T> v, std::string title = "") {
     std::cout << title << std::endl;
     for (typename ft::vector<T>::reverse_iterator it = v.rbegin(); it != v.rend(); it++)
         std::cout << *it << ", ";
     std::cout << std::endl;
 }
 
-int main()
+void test_vector()
 {
     // Constructors
     ft::vector<std::string> v_empty = ft::vector<std::string>();
@@ -80,6 +80,7 @@ int main()
     print(v_assig, "v_assign before clear");
     v_assig.clear();
     print(v_assig, "v_assign after clear");
+    std::cout << "\n# v_assign.size(): " << v_assig.size();
 
     v_count.insert(v_count.begin(), 33);
     v_count.insert(v_count.begin() + 2, 4, 9);

@@ -1,15 +1,26 @@
 CXX = c++
+
+STL = REAL_STL
+
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = main.cpp
+SRC = tests.cpp \
+	tests/test_utilities.cpp \
+	tests/test_iterators.cpp \
+	tests/test_vector.cpp \
+	tests/test_stack.cpp \
+	tests/test_map.cpp \
+	tests/test_set.cpp
+
 OBJ = $(SRC:.cpp=.o)
 
-NAME = main
+NAME = do_tests
 
 all: $(NAME)
 
 %.o: %.cpp %.hpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	mkdir -p obj/tests
+	$(CXX) $(CXXFLAGS) -c $< -o obj/$@
 
 $(NAME): $(OBJ)
 	$(CXX) $(OBJ) -o $(NAME)
