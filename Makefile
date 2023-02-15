@@ -1,6 +1,6 @@
 CXX = c++
 
-STL = REAL_STL
+STL = -DREAL_STL
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
@@ -18,19 +18,11 @@ NAME = do_tests
 
 all: $(NAME)
 
-%.o: %.cpp %.hpp
-	mkdir -p obj/tests
-	$(CXX) $(CXXFLAGS) -c $< -o obj/$@
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CXX) $(OBJ) -o $(NAME)
-
-test-utils: tests/test_utilities.cpp
-	$(CXX) $(CXXFLAGS) tests/test_utilities.cpp -o ft-utils
-	$(CXX) -Wall -Wextra -Werror tests/test_utilities.cpp -DREAL_STL -o std-utils
-	./ft-utils > ft.out
-	./std-utils > std.out
-	vimdiff ft.out std.out
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
 clean:
 	rm -f $(OBJ)

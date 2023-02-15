@@ -15,11 +15,11 @@ void test_iterators()
     s.push_back(25);
     s.push_back(35);
 
-	ft::reverse_iterator rb = s.rbegin();
+	ft::reverse_iterator<ft::vector<int>::iterator> rb = s.rbegin();
 	std::cout << "\nrb[0]: " << rb[0] << "\n";
 	std::cout << "rb[3]: " << rb[3] << "\n";
 
-	ft::reverse_iterator re = s.rend();
+	ft::reverse_iterator<ft::vector<int>::iterator> re = s.rend();
 	std::cout << "rb == re: " << (rb == re) << "\n";
 	std::cout << "rb != re: " << (rb != re) << "\n";
 	std::cout << "rb < re: " << (rb < re) << "\n";
